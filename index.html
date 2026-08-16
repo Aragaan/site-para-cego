@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
+    <!-- =========================================================
+         CONFIGURAÇÕES BÁSICAS
+         ========================================================= -->
+
     <meta charset="UTF-8">
 
     <meta
@@ -10,7 +16,7 @@
 
     <meta
         name="description"
-        content="ECHO//NULL — uma experiência de ação e exploração baseada em áudio espacial."
+        content="ECHO//NULL — uma experiência de exploração, ação e suspense guiada completamente pelo som."
     >
 
     <meta
@@ -18,33 +24,64 @@
         content="#000000"
     >
 
+    <meta
+        name="color-scheme"
+        content="dark"
+    >
+
+    <!-- =========================================================
+         ACESSIBILIDADE
+         ========================================================= -->
+
+    <meta
+        name="application-name"
+        content="ECHO//NULL"
+    >
+
+    <meta
+        name="mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black"
+    >
+
     <title>ECHO//NULL</title>
 
-    <!-- CSS principal -->
-    <link rel="stylesheet" href="./src/styles/style.css">
+
+    <!-- =========================================================
+         CSS
+         ========================================================= -->
+
+    <link
+        rel="stylesheet"
+        href="./src/styles/style.css"
+    >
+
 </head>
+
 
 <body>
 
-    <!--
-        ============================================================
-        ECHO//NULL
-        Estrutura principal do jogo
-
-        IMPORTANTE:
-        O jogo não depende de elementos visuais para transmitir
-        informações essenciais.
-        ============================================================
-    -->
+    <!-- =========================================================
+         REGIÕES PARA LEITORES DE TELA
+         ========================================================= -->
 
     <!--
-        Região destinada a mensagens de sistema para leitores
-        de tela.
+        Mensagens comuns.
 
-        role="status":
-        Mensagens informativas que não precisam interromper
-        imediatamente o jogador.
+        role="status" + aria-live="polite"
+        permite que NVDA, JAWS e VoiceOver recebam
+        informações sem interromper tudo.
     -->
+
     <div
         id="screen-reader-status"
         class="sr-only"
@@ -55,11 +92,16 @@
 
 
     <!--
-        Região para eventos críticos.
+        Mensagens urgentes.
 
-        Usaremos com moderação para evitar que o leitor de tela
-        fique anunciando informações constantemente.
+        Será utilizado para situações como:
+
+        • morte
+        • perigo extremo
+        • erro crítico
+        • perda de conexão
     -->
+
     <div
         id="screen-reader-alert"
         class="sr-only"
@@ -69,20 +111,19 @@
     ></div>
 
 
-    <!--
-        ============================================================
-        APLICAÇÃO
-        ============================================================
-    -->
+    <!-- =========================================================
+         APLICAÇÃO PRINCIPAL
+         ========================================================= -->
 
     <main
         id="game"
-        aria-label="ECHO//NULL — Jogo"
+        aria-label="ECHO//NULL"
     >
 
-        <!-- ======================================================
+
+        <!-- =====================================================
              MENU PRINCIPAL
-             ====================================================== -->
+             ===================================================== -->
 
         <section
             id="main-menu"
@@ -92,27 +133,59 @@
 
             <div class="menu-container">
 
-                <h1 id="main-menu-title">
-                    ECHO//NULL
-                </h1>
 
-                <p class="menu-subtitle">
-                    Uma experiência guiada pelo som.
-                </p>
+                <!-- LOGO -->
 
+                <header class="game-header">
+
+                    <p
+                        class="game-label"
+                        aria-hidden="true"
+                    >
+                        AUDIO-BASED EXPERIENCE
+                    </p>
+
+
+                    <h1 id="main-menu-title">
+                        ECHO<span>//</span>NULL
+                    </h1>
+
+
+                    <p class="menu-subtitle">
+                        Uma experiência guiada pelo som.
+                    </p>
+
+                </header>
+
+
+                <!-- MENU -->
 
                 <nav
                     id="main-navigation"
+                    class="main-navigation"
                     aria-label="Menu principal"
                 >
+
 
                     <button
                         type="button"
                         id="btn-new-game"
-                        class="menu-button"
+                        class="menu-button primary"
                     >
-                        Novo jogo
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            01
+                        </span>
+
+                        <span>
+                            Novo jogo
+                        </span>
+
                     </button>
+
 
                     <button
                         type="button"
@@ -120,43 +193,117 @@
                         class="menu-button"
                         disabled
                     >
-                        Continuar
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            02
+                        </span>
+
+                        <span>
+                            Continuar
+                        </span>
+
+                        <span
+                            class="button-status"
+                            aria-hidden="true"
+                        >
+                            INDISPONÍVEL
+                        </span>
+
                     </button>
+
 
                     <button
                         type="button"
                         id="btn-settings"
                         class="menu-button"
                     >
-                        Configurações
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            03
+                        </span>
+
+                        <span>
+                            Configurações
+                        </span>
+
                     </button>
+
 
                     <button
                         type="button"
                         id="btn-accessibility"
                         class="menu-button"
                     >
-                        Acessibilidade
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            04
+                        </span>
+
+                        <span>
+                            Acessibilidade
+                        </span>
+
                     </button>
+
 
                     <button
                         type="button"
                         id="btn-exit"
-                        class="menu-button"
+                        class="menu-button secondary"
                     >
-                        Sair
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            05
+                        </span>
+
+                        <span>
+                            Sair
+                        </span>
+
                     </button>
 
                 </nav>
+
+
+                <!-- INFORMAÇÕES -->
+
+                <footer class="menu-footer">
+
+                    <span>
+                        ECHO//NULL
+                    </span>
+
+                    <span aria-hidden="true">
+                        •
+                    </span>
+
+                    <span>
+                        v0.1.0
+                    </span>
+
+                </footer>
+
 
             </div>
 
         </section>
 
 
-        <!-- ======================================================
-             TELA DE CALIBRAÇÃO
-             ====================================================== -->
+        <!-- =====================================================
+             CALIBRAÇÃO DE ÁUDIO
+             ===================================================== -->
 
         <section
             id="calibration-screen"
@@ -164,61 +311,121 @@
             aria-labelledby="calibration-title"
         >
 
-            <div class="menu-container">
+            <div class="menu-container calibration-container">
 
-                <h2 id="calibration-title">
-                    Calibração de áudio
-                </h2>
 
-                <p id="calibration-description">
-                    Antes de começar, vamos configurar sua experiência
-                    sonora.
-                </p>
+                <header class="screen-header">
 
+                    <p class="screen-label">
+                        CONFIGURAÇÃO INICIAL
+                    </p>
+
+                    <h2 id="calibration-title">
+                        Calibração de áudio
+                    </h2>
+
+                    <p id="calibration-description">
+                        Antes de começar, vamos configurar
+                        sua experiência sonora.
+                    </p>
+
+                </header>
+
+
+                <!-- STATUS -->
 
                 <div
                     id="calibration-status"
+                    class="system-message"
                     role="status"
                     aria-live="polite"
+                    aria-atomic="true"
                 >
                     Aguardando configuração.
                 </div>
 
 
-                <button
-                    type="button"
-                    id="btn-start-calibration"
-                    class="menu-button"
+                <!-- TESTE DE ÁUDIO -->
+
+                <div
+                    class="calibration-panel"
+                    aria-label="Teste de áudio"
                 >
-                    Iniciar calibração
-                </button>
+
+                    <div class="audio-indicator">
+
+                        <span
+                            class="audio-pulse"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>
+                            TESTE SONORO
+                        </span>
+
+                    </div>
 
 
-                <button
-                    type="button"
-                    id="btn-skip-calibration"
-                    class="menu-button secondary"
-                >
-                    Usar configuração padrão
-                </button>
+                    <p>
+                        Você ouvirá sinais sonoros
+                        posicionados ao seu redor.
+                    </p>
+
+                    <p>
+                        Utilize fones de ouvido
+                        estéreo para obter a melhor experiência.
+                    </p>
+
+                </div>
 
 
-                <button
-                    type="button"
-                    id="btn-back-calibration"
-                    class="menu-button secondary"
-                >
-                    Voltar
-                </button>
+                <!-- CONTROLES -->
+
+                <div class="screen-actions">
+
+                    <button
+                        type="button"
+                        id="btn-start-calibration"
+                        class="menu-button primary"
+                    >
+
+                        Iniciar calibração
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btn-skip-calibration"
+                        class="menu-button secondary"
+                    >
+
+                        Usar configuração padrão
+
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="btn-back-calibration"
+                        class="menu-button secondary"
+                    >
+
+                        Voltar
+
+                    </button>
+
+                </div>
+
 
             </div>
 
         </section>
 
 
-        <!-- ======================================================
-             JOGO
-             ====================================================== -->
+        <!-- =====================================================
+             GAMEPLAY
+             ===================================================== -->
 
         <section
             id="game-screen"
@@ -226,24 +433,21 @@
             aria-label="Área de jogo"
         >
 
-            <!--
-                Este elemento representa o mundo lógico.
 
-                Não vamos utilizar canvas como dependência do jogo.
-                A experiência será produzida pelo Audio Engine,
-                física e sistemas do jogo.
-            -->
+            <!-- =================================================
+                 MUNDO INVISÍVEL
+                 ================================================= -->
+
             <div
                 id="world"
                 aria-hidden="true"
             ></div>
 
 
-            <!--
-                Status interno para acessibilidade.
+            <!-- =================================================
+                 STATUS DO JOGO
+                 ================================================= -->
 
-                Não será usado para narrar cada som.
-            -->
             <div
                 id="game-status"
                 class="sr-only"
@@ -253,24 +457,25 @@
             ></div>
 
 
-            <!--
-                Informações essenciais do jogador.
+            <!-- =================================================
+                 ESTADO DO JOGADOR
+                 ================================================= -->
 
-                Futuramente serão atualizadas pelo JavaScript.
-            -->
             <aside
                 id="player-status"
                 class="sr-only"
-                aria-label="Estado do jogador"
+                aria-label="Estado atual do jogador"
             >
 
                 <span id="player-health">
                     Vida: 100
                 </span>
 
+
                 <span id="player-stamina">
                     Resistência: 100
                 </span>
+
 
                 <span id="player-location">
                     Localização desconhecida
@@ -279,57 +484,100 @@
             </aside>
 
 
-            <!--
-                Controles acessíveis do jogo.
+            <!-- =================================================
+                 INDICADOR SONORO
+                 ================================================= -->
 
-                Eles não precisam ficar visíveis.
-                O teclado e o Gamepad serão os métodos principais.
+            <div
+                id="audio-world"
+                aria-hidden="true"
+            >
 
-                Essa camada existe para garantir que ações
-                essenciais possam ser descobertas e testadas.
-            -->
+                <div
+                    id="echo-visualizer"
+                    class="echo-visualizer"
+                ></div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CONTROLES ACESSÍVEIS
+                 ================================================= -->
+
             <div
                 id="game-controls"
-                class="sr-only"
+                class="game-controls"
                 aria-label="Controles do jogo"
             >
+
 
                 <button
                     type="button"
                     id="control-echo"
+                    class="game-control"
                 >
                     Emitir eco
                 </button>
 
+
                 <button
                     type="button"
                     id="control-interact"
+                    class="game-control"
                 >
                     Interagir
                 </button>
 
+
                 <button
                     type="button"
                     id="control-attack"
+                    class="game-control"
                 >
                     Atacar
                 </button>
 
+
                 <button
                     type="button"
                     id="control-pause"
+                    class="game-control"
                 >
                     Pausar
                 </button>
 
+
             </div>
 
+
+            <!-- =================================================
+                 DESCRIÇÃO DO CONTROLE
+                 ================================================= -->
+
+            <div
+                id="control-help"
+                class="sr-only"
+            >
+
+                Use W, A, S e D ou o analógico esquerdo
+                para se movimentar.
+
+                Pressione E ou o botão X para emitir um eco.
+
+                Pressione F ou o botão B para interagir.
+
+                Pressione espaço ou o botão A para atacar.
+
+                Pressione Escape para pausar.
+
+            </div>
+
+
         </section>
-
-
-        <!-- ======================================================
-             PAUSA
-             ====================================================== -->
+        <!-- =====================================================
+             TELA DE PAUSA
+             ===================================================== -->
 
         <section
             id="pause-screen"
@@ -337,58 +585,135 @@
             aria-labelledby="pause-title"
         >
 
-            <div class="menu-container">
+            <div class="menu-container pause-container">
 
-                <h2 id="pause-title">
-                    Jogo pausado
-                </h2>
+                <header class="screen-header">
+
+                    <p class="screen-label">
+                        JOGO INTERROMPIDO
+                    </p>
+
+                    <h2 id="pause-title">
+                        Jogo pausado
+                    </h2>
+
+                    <p>
+                        A experiência está temporariamente pausada.
+                    </p>
+
+                </header>
+
+
+                <!-- MENU DE PAUSA -->
 
                 <nav
+                    class="pause-navigation"
                     aria-label="Menu de pausa"
                 >
 
                     <button
                         type="button"
                         id="btn-resume"
-                        class="menu-button"
+                        class="menu-button primary"
                     >
-                        Continuar
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            01
+                        </span>
+
+                        <span>
+                            Continuar
+                        </span>
+
                     </button>
+
 
                     <button
                         type="button"
                         id="btn-pause-settings"
                         class="menu-button"
                     >
-                        Configurações
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            02
+                        </span>
+
+                        <span>
+                            Configurações
+                        </span>
+
                     </button>
+
 
                     <button
                         type="button"
                         id="btn-save"
                         class="menu-button"
                     >
-                        Salvar
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            03
+                        </span>
+
+                        <span>
+                            Salvar
+                        </span>
+
                     </button>
+
 
                     <button
                         type="button"
-                        id="btn-main-menu"
+                        id="btn-pause-main-menu"
                         class="menu-button secondary"
                     >
-                        Menu principal
+
+                        <span
+                            class="button-index"
+                            aria-hidden="true"
+                        >
+                            04
+                        </span>
+
+                        <span>
+                            Menu principal
+                        </span>
+
                     </button>
 
                 </nav>
+
+
+                <!-- STATUS DO SAVE -->
+
+                <div
+                    id="save-status"
+                    class="system-message"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                >
+                    Jogo pausado.
+                </div>
+
 
             </div>
 
         </section>
 
 
-        <!-- ======================================================
+        <!-- =====================================================
              CONFIGURAÇÕES
-             ====================================================== -->
+             ===================================================== -->
 
         <section
             id="settings-screen"
@@ -396,107 +721,321 @@
             aria-labelledby="settings-title"
         >
 
-            <div class="menu-container">
+            <div class="menu-container settings-container">
 
-                <h2 id="settings-title">
-                    Configurações
-                </h2>
+                <header class="screen-header">
+
+                    <p class="screen-label">
+                        SISTEMA
+                    </p>
+
+                    <h2 id="settings-title">
+                        Configurações
+                    </h2>
+
+                    <p>
+                        Personalize sua experiência sonora
+                        e os controles do ECHO//NULL.
+                    </p>
+
+                </header>
 
 
-                <div class="settings-group">
+                <!-- =================================================
+                     ÁUDIO
+                     ================================================= -->
 
-                    <h3>
+                <fieldset class="settings-group">
+
+                    <legend>
                         Áudio
-                    </h3>
-
-                    <label for="master-volume">
-                        Volume geral
-                    </label>
-
-                    <input
-                        type="range"
-                        id="master-volume"
-                        min="0"
-                        max="100"
-                        value="100"
-                    >
-
-                </div>
+                    </legend>
 
 
-                <div class="settings-group">
+                    <div class="setting-item">
 
-                    <h3>
-                        Acessibilidade
-                    </h3>
+                        <label
+                            for="master-volume"
+                            id="master-volume-label"
+                        >
+                            Volume geral
+                        </label>
 
 
-                    <label>
+                        <div class="range-control">
+
+                            <input
+                                type="range"
+                                id="master-volume"
+                                name="master-volume"
+                                min="0"
+                                max="100"
+                                value="100"
+                                step="1"
+                                aria-labelledby="master-volume-label"
+                                aria-valuemin="0"
+                                aria-valuemax="100"
+                                aria-valuenow="100"
+                            >
+
+
+                            <output
+                                id="master-volume-value"
+                                for="master-volume"
+                                aria-live="polite"
+                            >
+                                100%
+                            </output>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="setting-item">
+
+                        <label
+                            for="spatial-audio"
+                        >
+                            Áudio espacial 3D
+                        </label>
+
+
                         <input
                             type="checkbox"
-                            id="enable-haptics"
+                            id="spatial-audio"
+                            name="spatial-audio"
                             checked
                         >
 
-                        Feedback tátil
-                    </label>
+                    </div>
 
 
-                    <label>
+                    <div class="setting-item">
+
+                        <label
+                            for="dynamic-range"
+                        >
+                            Faixa dinâmica ampliada
+                        </label>
+
+
                         <input
                             type="checkbox"
-                            id="enable-voice"
+                            id="dynamic-range"
+                            name="dynamic-range"
+                            checked
                         >
 
-                        Comandos de voz
-                    </label>
+                    </div>
+
+                </fieldset>
 
 
-                    <label>
+                <!-- =================================================
+                     ACESSIBILIDADE
+                     ================================================= -->
+
+                <fieldset class="settings-group">
+
+                    <legend>
+                        Acessibilidade
+                    </legend>
+
+
+                    <div class="setting-item">
+
+                        <label
+                            for="haptic-feedback"
+                        >
+                            Feedback tátil
+                        </label>
+
+
                         <input
                             type="checkbox"
-                            id="enable-high-contrast"
+                            id="haptic-feedback"
+                            name="haptic-feedback"
+                            checked
                         >
 
-                        Alto contraste
-                    </label>
-
-                </div>
+                    </div>
 
 
-                <div class="settings-group">
+                    <div class="setting-item">
 
-                    <h3>
+                        <label
+                            for="voice-commands"
+                        >
+                            Comandos de voz
+                        </label>
+
+
+                        <input
+                            type="checkbox"
+                            id="voice-commands"
+                            name="voice-commands"
+                        >
+
+                    </div>
+
+
+                    <div class="setting-item">
+
+                        <label
+                            for="high-contrast"
+                        >
+                            Alto contraste
+                        </label>
+
+
+                        <input
+                            type="checkbox"
+                            id="high-contrast"
+                            name="high-contrast"
+                        >
+
+                    </div>
+
+
+                    <div class="setting-item">
+
+                        <label
+                            for="screen-reader-mode"
+                        >
+                            Modo otimizado para leitor de tela
+                        </label>
+
+
+                        <input
+                            type="checkbox"
+                            id="screen-reader-mode"
+                            name="screen-reader-mode"
+                            checked
+                        >
+
+                    </div>
+
+                </fieldset>
+
+
+                <!-- =================================================
+                     CONTROLES
+                     ================================================= -->
+
+                <fieldset class="settings-group">
+
+                    <legend>
                         Controles
-                    </h3>
+                    </legend>
+
+
+                    <div class="controls-description">
+
+                        <p>
+                            Configure teclado, controle ou comandos
+                            alternativos para jogar sem visão.
+                        </p>
+
+                    </div>
+
 
                     <button
                         type="button"
-                        id="btn-keybindings"
+                        id="btn-configure-controls"
                         class="menu-button"
                     >
                         Configurar controles
                     </button>
 
+                </fieldset>
+
+
+                <!-- =================================================
+                     INFORMAÇÕES DO SISTEMA
+                     ================================================= -->
+
+                <fieldset class="settings-group">
+
+                    <legend>
+                        Sistema de áudio
+                    </legend>
+
+
+                    <div
+                        id="audio-engine-status"
+                        class="system-info"
+                        aria-live="polite"
+                    >
+
+                        <div class="system-info-row">
+
+                            <span>
+                                Motor de áudio
+                            </span>
+
+                            <strong id="audio-engine-state">
+                                Aguardando
+                            </strong>
+
+                        </div>
+
+
+                        <div class="system-info-row">
+
+                            <span>
+                                Áudio espacial
+                            </span>
+
+                            <strong id="spatial-audio-state">
+                                Ativo
+                            </strong>
+
+                        </div>
+
+
+                        <div class="system-info-row">
+
+                            <span>
+                                Dispositivo
+                            </span>
+
+                            <strong id="audio-device-state">
+                                Detectando...
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </fieldset>
+
+
+                <!-- =================================================
+                     BOTÕES
+                     ================================================= -->
+
+                <div class="screen-actions">
+
+                    <button
+                        type="button"
+                        id="btn-settings-back"
+                        class="menu-button secondary"
+                    >
+                        Voltar
+                    </button>
+
                 </div>
 
-
-                <button
-                    type="button"
-                    id="btn-back-settings"
-                    class="menu-button secondary"
-                >
-                    Voltar
-                </button>
 
             </div>
 
         </section>
 
 
-        <!-- ======================================================
-             ACESSIBILIDADE
-             ====================================================== -->
+        <!-- =====================================================
+             TELA DE ACESSIBILIDADE
+             ===================================================== -->
 
         <section
             id="accessibility-screen"
@@ -504,30 +1043,63 @@
             aria-labelledby="accessibility-title"
         >
 
-            <div class="menu-container">
+            <div class="menu-container accessibility-container">
 
-                <h2 id="accessibility-title">
-                    Acessibilidade
-                </h2>
+                <header class="screen-header">
+
+                    <p class="screen-label">
+                        ACESSIBILIDADE
+                    </p>
+
+                    <h2 id="accessibility-title">
+                        Acessibilidade
+                    </h2>
+
+                    <p>
+                        Todas as funções essenciais do jogo podem
+                        ser utilizadas sem visão.
+                    </p>
+
+                </header>
 
 
-                <p>
-                    Todas as opções essenciais do jogo podem ser
-                    utilizadas sem visão.
-                </p>
+                <!-- =================================================
+                     LEITOR DE TELA
+                     ================================================= -->
 
-
-                <div class="accessibility-info">
+                <article class="accessibility-card">
 
                     <h3>
                         Leitor de tela
                     </h3>
 
                     <p>
-                        O jogo fornece informações semânticas para
-                        tecnologias assistivas compatíveis.
+                        O jogo fornece informações semânticas
+                        para tecnologias assistivas compatíveis.
                     </p>
 
+
+                    <div class="accessibility-status">
+
+                        <span
+                            class="status-indicator"
+                            aria-hidden="true"
+                        ></span>
+
+                        <span>
+                            Compatibilidade com ARIA ativada
+                        </span>
+
+                    </div>
+
+                </article>
+
+
+                <!-- =================================================
+                     TECLADO
+                     ================================================= -->
+
+                <article class="accessibility-card">
 
                     <h3>
                         Teclado
@@ -539,86 +1111,1368 @@
                     </p>
 
 
+                    <dl class="key-list">
+
+                        <div>
+                            <dt>W / ↑</dt>
+                            <dd>Avançar</dd>
+                        </div>
+
+
+                        <div>
+                            <dt>S / ↓</dt>
+                            <dd>Recuar</dd>
+                        </div>
+
+
+                        <div>
+                            <dt>A / ←</dt>
+                            <dd>Esquerda</dd>
+                        </div>
+
+
+                        <div>
+                            <dt>D / →</dt>
+                            <dd>Direita</dd>
+                        </div>
+
+
+                        <div>
+                            <dt>E</dt>
+                            <dd>Emitir eco</dd>
+                        </div>
+
+
+                        <div>
+                            <dt>F</dt>
+                            <dd>Interagir</dd>
+                        </div>
+
+
+                        <div>
+                            <dt>Espaço</dt>
+                            <dd>Atacar</dd>
+                        </div>
+
+
+                        <div>
+                            <dt>Esc</dt>
+                            <dd>Pausar</dd>
+                        </div>
+
+                    </dl>
+
+                </article>
+
+
+                <!-- =================================================
+                     GAMEPAD
+                     ================================================= -->
+
+                <article class="accessibility-card">
+
                     <h3>
-                        Gamepad
+                        Controle
                     </h3>
 
                     <p>
-                        Controles compatíveis podem ser utilizados
-                        através da Gamepad API.
+                        O ECHO//NULL detectará automaticamente
+                        controles compatíveis com a Gamepad API.
                     </p>
 
 
+                    <div
+                        id="gamepad-status"
+                        class="system-message"
+                        role="status"
+                        aria-live="polite"
+                    >
+                        Nenhum controle detectado.
+                    </div>
+
+                </article>
+
+
+                <!-- =================================================
+                     COMANDOS DE VOZ
+                     ================================================= -->
+
+                <article class="accessibility-card">
+
                     <h3>
-                        Áudio espacial
+                        Comandos de voz
                     </h3>
 
                     <p>
-                        O mundo utiliza áudio espacial para transmitir
-                        direção e distância.
+                        Quando disponíveis no navegador,
+                        comandos de voz podem ser utilizados
+                        para executar ações.
                     </p>
 
+
+                    <div
+                        id="voice-status"
+                        class="system-message"
+                        role="status"
+                        aria-live="polite"
+                    >
+                        Comandos de voz desativados.
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="btn-test-voice"
+                        class="menu-button"
+                    >
+                        Testar comandos de voz
+                    </button>
+
+                </article>
+
+
+                <!-- =================================================
+                     FEEDBACK TÁTIL
+                     ================================================= -->
+
+                <article class="accessibility-card">
 
                     <h3>
                         Feedback tátil
                     </h3>
 
                     <p>
-                        Quando disponível, vibração pode complementar
-                        informações sonoras.
+                        Vibrações podem representar impactos,
+                        passos, batimentos cardíacos e eventos
+                        direcionais.
                     </p>
+
+
+                    <button
+                        type="button"
+                        id="btn-test-haptics"
+                        class="menu-button"
+                    >
+                        Testar vibração
+                    </button>
+
+                </article>
+
+
+                <!-- =================================================
+                     VOLTAR
+                     ================================================= -->
+
+                <div class="screen-actions">
+
+                    <button
+                        type="button"
+                        id="btn-accessibility-back"
+                        class="menu-button secondary"
+                    >
+                        Voltar
+                    </button>
 
                 </div>
 
 
+            </div>
+
+        </section>
+                <!-- =====================================================
+             GAMEPLAY — HUD SONORO
+             ===================================================== -->
+
+        <div
+            id="game-hud"
+            class="game-hud"
+            aria-label="Informações do jogador"
+        >
+
+
+            <!-- =================================================
+                 ESTADO DO JOGADOR
+                 ================================================= -->
+
+            <section
+                id="hud-player"
+                class="hud-panel"
+                aria-label="Estado do jogador"
+            >
+
+                <h2 class="hud-title">
+                    Jogador
+                </h2>
+
+
+                <div class="hud-stat">
+
+                    <span class="hud-label">
+                        Vida
+                    </span>
+
+                    <meter
+                        id="health-meter"
+                        min="0"
+                        max="100"
+                        value="100"
+                    >
+                        100%
+                    </meter>
+
+                    <span
+                        id="health-value"
+                        aria-live="polite"
+                    >
+                        100%
+                    </span>
+
+                </div>
+
+
+                <div class="hud-stat">
+
+                    <span class="hud-label">
+                        Resistência
+                    </span>
+
+                    <meter
+                        id="stamina-meter"
+                        min="0"
+                        max="100"
+                        value="100"
+                    >
+                        100%
+                    </meter>
+
+                    <span
+                        id="stamina-value"
+                        aria-live="polite"
+                    >
+                        100%
+                    </span>
+
+                </div>
+
+
+                <div class="hud-stat">
+
+                    <span class="hud-label">
+                        Respiração
+                    </span>
+
+                    <meter
+                        id="breathing-meter"
+                        min="0"
+                        max="100"
+                        value="100"
+                    >
+                        100%
+                    </meter>
+
+                    <span
+                        id="breathing-value"
+                        aria-live="polite"
+                    >
+                        Normal
+                    </span>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 BÚSSOLA SONORA
+                 ================================================= -->
+
+            <section
+                id="sound-compass"
+                class="hud-panel"
+                aria-label="Navegação sonora"
+            >
+
+                <h2 class="hud-title">
+                    Orientação
+                </h2>
+
+
+                <div
+                    id="direction-indicator"
+                    class="direction-indicator"
+                    aria-hidden="true"
+                >
+
+                    <span
+                        class="direction north"
+                    >
+                        N
+                    </span>
+
+                    <span
+                        class="direction east"
+                    >
+                        L
+                    </span>
+
+                    <span
+                        class="direction south"
+                    >
+                        S
+                    </span>
+
+                    <span
+                        class="direction west"
+                    >
+                        O
+                    </span>
+
+                    <span
+                        id="player-direction"
+                        class="player-direction"
+                    >
+                        ↑
+                    </span>
+
+                </div>
+
+
+                <p
+                    id="direction-announcement"
+                    class="sr-only"
+                    aria-live="polite"
+                >
+                    Direção atual desconhecida.
+                </p>
+
+
+                <div class="sound-distance">
+
+                    <span>
+                        Distância do alvo
+                    </span>
+
+                    <strong id="target-distance">
+                        Desconhecida
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 AMBIENTE
+                 ================================================= -->
+
+            <section
+                id="environment-status"
+                class="hud-panel"
+                aria-label="Ambiente"
+            >
+
+                <h2 class="hud-title">
+                    Ambiente
+                </h2>
+
+
+                <div class="environment-row">
+
+                    <span>
+                        Local
+                    </span>
+
+                    <strong id="current-location">
+                        Desconhecido
+                    </strong>
+
+                </div>
+
+
+                <div class="environment-row">
+
+                    <span>
+                        Espaço
+                    </span>
+
+                    <strong id="current-room">
+                        Desconhecido
+                    </strong>
+
+                </div>
+
+
+                <div class="environment-row">
+
+                    <span>
+                        Superfície
+                    </span>
+
+                    <strong id="current-surface">
+                        Desconhecida
+                    </strong>
+
+                </div>
+
+
+                <div class="environment-row">
+
+                    <span>
+                        Acústica
+                    </span>
+
+                    <strong id="current-acoustics">
+                        Desconhecida
+                    </strong>
+
+                </div>
+
+            </section>
+
+
+            <!-- =================================================
+                 AMEAÇA
+                 ================================================= -->
+
+            <section
+                id="threat-status"
+                class="hud-panel threat-panel"
+                aria-label="Ameaças próximas"
+            >
+
+                <h2 class="hud-title">
+                    Ameaça
+                </h2>
+
+
+                <div
+                    id="threat-indicator"
+                    class="threat-indicator"
+                    aria-hidden="true"
+                >
+
+                    <span
+                        id="threat-pulse"
+                        class="threat-pulse"
+                    ></span>
+
+                </div>
+
+
+                <p
+                    id="threat-description"
+                    aria-live="assertive"
+                >
+                    Nenhuma ameaça detectada.
+                </p>
+
+
+                <p id="threat-direction">
+                    Direção desconhecida.
+                </p>
+
+
+                <p id="threat-distance">
+                    Distância desconhecida.
+                </p>
+
+            </section>
+
+        </div>
+
+
+        <!-- =====================================================
+             SISTEMA DE ECOLOCALIZAÇÃO
+             ===================================================== -->
+
+        <section
+            id="echolocation-system"
+            class="game-system"
+            aria-label="Sistema de ecolocalização"
+        >
+
+            <div class="system-header">
+
+                <span class="system-label">
+                    ECO
+                </span>
+
+                <span
+                    id="echo-charge-label"
+                >
+                    Carga
+                </span>
+
+            </div>
+
+
+            <div class="echo-charge">
+
+                <meter
+                    id="echo-meter"
+                    min="0"
+                    max="100"
+                    value="100"
+                >
+                    100%
+                </meter>
+
+
+                <span
+                    id="echo-value"
+                    aria-live="polite"
+                >
+                    100%
+                </span>
+
+            </div>
+
+
+            <p
+                id="echo-description"
+                class="sr-only"
+                aria-live="polite"
+            >
+                Ecolocalização disponível.
+            </p>
+
+
+            <button
+                type="button"
+                id="echo-button"
+                class="game-action-button"
+                aria-label="Emitir pulso de ecolocalização"
+            >
+                Emitir eco
+            </button>
+
+        </section>
+
+
+        <!-- =====================================================
+             OBJETOS DETECTADOS
+             ===================================================== -->
+
+        <section
+            id="detected-objects"
+            class="game-system"
+            aria-label="Objetos detectados pelo eco"
+        >
+
+            <h2 class="system-title">
+                Objetos detectados
+            </h2>
+
+
+            <ul
+                id="object-list"
+                class="object-list"
+                aria-live="polite"
+                aria-relevant="additions removals"
+            >
+
+                <li
+                    id="no-objects"
+                    class="object-empty"
+                >
+                    Nenhum objeto detectado.
+                </li>
+
+            </ul>
+
+        </section>
+
+
+        <!-- =====================================================
+             EVENTOS SONOROS
+             ===================================================== -->
+
+        <section
+            id="sound-events"
+            class="game-system"
+            aria-label="Eventos sonoros recentes"
+        >
+
+            <h2 class="system-title">
+                Eventos sonoros
+            </h2>
+
+
+            <ol
+                id="sound-event-list"
+                class="sound-event-list"
+                aria-live="polite"
+                aria-relevant="additions"
+            >
+
+                <li>
+                    Silêncio.
+                </li>
+
+            </ol>
+
+        </section>
+
+
+        <!-- =====================================================
+             INTERAÇÃO
+             ===================================================== -->
+
+        <section
+            id="interaction-system"
+            class="game-system hidden"
+            aria-label="Interação"
+        >
+
+            <h2
+                id="interaction-title"
+                class="system-title"
+            >
+                Interação disponível
+            </h2>
+
+
+            <p
+                id="interaction-description"
+            >
+                Nenhuma interação disponível.
+            </p>
+
+
+            <div class="interaction-actions">
+
                 <button
                     type="button"
-                    id="btn-back-accessibility"
-                    class="menu-button secondary"
+                    id="interaction-confirm"
+                    class="game-action-button"
                 >
-                    Voltar
+                    Interagir
+                </button>
+
+
+                <button
+                    type="button"
+                    id="interaction-cancel"
+                    class="game-action-button secondary"
+                >
+                    Cancelar
                 </button>
 
             </div>
 
         </section>
 
+
+        <!-- =====================================================
+             DIÁLOGO
+             ===================================================== -->
+
+        <section
+            id="dialogue-system"
+            class="dialogue-system hidden"
+            aria-labelledby="dialogue-speaker"
+            aria-describedby="dialogue-text"
+        >
+
+            <div class="dialogue-container">
+
+
+                <header class="dialogue-header">
+
+                    <span class="dialogue-label">
+                        VOZ DETECTADA
+                    </span>
+
+
+                    <h2 id="dialogue-speaker">
+                        Desconhecido
+                    </h2>
+
+                </header>
+
+
+                <div
+                    id="dialogue-text"
+                    class="dialogue-text"
+                    role="article"
+                    aria-live="polite"
+                >
+                    ...
+                </div>
+
+
+                <div
+                    id="dialogue-choices"
+                    class="dialogue-choices"
+                    role="group"
+                    aria-label="Opções de diálogo"
+                ></div>
+
+
+                <div class="dialogue-controls">
+
+                    <button
+                        type="button"
+                        id="dialogue-continue"
+                        class="game-action-button"
+                    >
+                        Continuar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="dialogue-end"
+                        class="game-action-button secondary"
+                    >
+                        Encerrar conversa
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             INVENTÁRIO
+             ===================================================== -->
+
+        <section
+            id="inventory-system"
+            class="inventory-system hidden"
+            aria-labelledby="inventory-title"
+        >
+
+            <div class="inventory-container">
+
+                <header class="screen-header">
+
+                    <p class="screen-label">
+                        EQUIPAMENTO
+                    </p>
+
+                    <h2 id="inventory-title">
+                        Inventário
+                    </h2>
+
+                </header>
+
+
+                <ul
+                    id="inventory-list"
+                    class="inventory-list"
+                    aria-live="polite"
+                >
+
+                    <li class="inventory-empty">
+                        Seu inventário está vazio.
+                    </li>
+
+                </ul>
+
+
+                <div class="inventory-actions">
+
+                    <button
+                        type="button"
+                        id="inventory-use"
+                        class="game-action-button"
+                        disabled
+                    >
+                        Usar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="inventory-close"
+                        class="game-action-button secondary"
+                    >
+                        Fechar
+                    </button>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             SISTEMA DE COMBATE
+             ===================================================== -->
+
+        <section
+            id="combat-system"
+            class="combat-system hidden"
+            aria-label="Combate"
+        >
+
+            <div class="combat-container">
+
+
+                <header class="combat-header">
+
+                    <span class="combat-warning">
+                        AMEAÇA
+                    </span>
+
+                    <h2 id="combat-target">
+                        Entidade desconhecida
+                    </h2>
+
+                </header>
+
+
+                <div class="combat-information">
+
+                    <p>
+                        Direção:
+                        <strong id="combat-direction">
+                            desconhecida
+                        </strong>
+                    </p>
+
+
+                    <p>
+                        Distância:
+                        <strong id="combat-distance">
+                            desconhecida
+                        </strong>
+                    </p>
+
+
+                    <p>
+                        Estado:
+                        <strong id="combat-state">
+                            aguardando
+                        </strong>
+                    </p>
+
+                </div>
+
+
+                <div
+                    id="enemy-heartbeat"
+                    class="enemy-heartbeat"
+                    aria-hidden="true"
+                ></div>
+
+
+                <div
+                    class="combat-actions"
+                    role="group"
+                    aria-label="Ações de combate"
+                >
+
+                    <button
+                        type="button"
+                        id="combat-attack"
+                        class="game-action-button primary"
+                    >
+                        Atacar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="combat-dodge"
+                        class="game-action-button"
+                    >
+                        Esquivar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="combat-listen"
+                        class="game-action-button"
+                    >
+                        Escutar
+                    </button>
+
+
+                    <button
+                        type="button"
+                        id="combat-retreat"
+                        class="game-action-button secondary"
+                    >
+                        Recuar
+                    </button>
+
+                </div>
+
+
+                <p
+                    id="combat-announcement"
+                    class="sr-only"
+                    role="status"
+                    aria-live="assertive"
+                ></p>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             COMANDO DE VOZ
+             ===================================================== -->
+
+        <section
+            id="voice-command-system"
+            class="voice-command-system hidden"
+            aria-labelledby="voice-command-title"
+        >
+
+            <div class="voice-command-container">
+
+                <span class="screen-label">
+                    COMANDO DE VOZ
+                </span>
+
+
+                <h2 id="voice-command-title">
+                    Escutando...
+                </h2>
+
+
+                <p
+                    id="voice-command-result"
+                    aria-live="polite"
+                >
+                    Aguardando comando.
+                </p>
+
+
+                <div
+                    id="voice-listening-indicator"
+                    class="voice-listening-indicator"
+                    aria-hidden="true"
+                >
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    id="voice-command-cancel"
+                    class="game-action-button secondary"
+                >
+                    Cancelar
+                </button>
+
+            </div>
+
+        </section>
+
+
+        <!-- =====================================================
+             MENSAGEM CENTRAL DO MUNDO
+             ===================================================== -->
+
+        <div
+            id="world-message"
+            class="world-message"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+        ></div>
+
+
+        <!-- =====================================================
+             INDICADOR DE CARREGAMENTO
+             ===================================================== -->
+
+        <div
+            id="loading-overlay"
+            class="loading-overlay hidden"
+            role="status"
+            aria-live="polite"
+            aria-busy="true"
+        >
+
+            <div class="loading-content">
+
+                <span
+                    class="loading-symbol"
+                    aria-hidden="true"
+                >
+                    ◉
+                </span>
+
+
+                <p id="loading-message">
+                    Inicializando sistema...
+                </p>
+
+
+                <div
+                    class="loading-progress"
+                    aria-hidden="true"
+                >
+
+                    <span
+                        id="loading-progress-bar"
+                    ></span>
+
+                </div>
+
+            </div>
+
+        </div>
+                <!-- ============================================================
+             PARTE 4/4 — SISTEMA, COMPATIBILIDADE E FINAL DO DOCUMENTO
+             ECHO//NULL
+             ============================================================ -->
+
+        <!-- ============================================================
+             SISTEMA DE COMPATIBILIDADE
+             ============================================================ -->
+
+        <section
+            id="system-status"
+            class="system-status"
+            aria-labelledby="system-status-title"
+            hidden
+        >
+            <h2 id="system-status-title">Status do sistema</h2>
+
+            <div
+                id="audio-status"
+                class="system-status__item"
+                role="status"
+                aria-live="polite"
+            >
+                <span class="system-status__label">Áudio:</span>
+                <span id="audio-status-text">Verificando suporte...</span>
+            </div>
+
+            <div
+                id="speech-status"
+                class="system-status__item"
+                role="status"
+                aria-live="polite"
+            >
+                <span class="system-status__label">Síntese de voz:</span>
+                <span id="speech-status-text">Verificando suporte...</span>
+            </div>
+
+            <div
+                id="gamepad-status"
+                class="system-status__item"
+                role="status"
+                aria-live="polite"
+            >
+                <span class="system-status__label">Controle:</span>
+                <span id="gamepad-status-text">Verificando suporte...</span>
+            </div>
+
+            <div
+                id="browser-status"
+                class="system-status__item"
+                role="status"
+                aria-live="polite"
+            >
+                <span class="system-status__label">Navegador:</span>
+                <span id="browser-status-text">Verificando compatibilidade...</span>
+            </div>
+        </section>
+
+
+        <!-- ============================================================
+             ÁREA DE MENSAGENS DO SISTEMA
+             ============================================================ -->
+
+        <section
+            id="system-messages"
+            class="system-messages"
+            aria-labelledby="system-messages-title"
+        >
+            <h2 id="system-messages-title" class="sr-only">
+                Mensagens do sistema
+            </h2>
+
+            <div
+                id="game-message"
+                class="game-message"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+            ></div>
+
+            <div
+                id="game-warning"
+                class="game-warning"
+                role="alert"
+                aria-live="assertive"
+                aria-atomic="true"
+            ></div>
+        </section>
+
+
+        <!-- ============================================================
+             ÁREA DE DESCRIÇÃO DO AMBIENTE
+             Usada pelo sistema de áudio e leitores de tela.
+             ============================================================ -->
+
+        <section
+            id="environment-description"
+            class="environment-description"
+            aria-labelledby="environment-title"
+        >
+            <h2 id="environment-title" class="sr-only">
+                Descrição do ambiente
+            </h2>
+
+            <p
+                id="environment-text"
+                aria-live="polite"
+                aria-atomic="true"
+            >
+                O ambiente está sendo analisado.
+            </p>
+        </section>
+
+
+        <!-- ============================================================
+             EVENTOS E FEEDBACK DE JOGO
+             ============================================================ -->
+
+        <section
+            id="event-log"
+            class="event-log"
+            aria-labelledby="event-log-title"
+        >
+            <h2 id="event-log-title" class="sr-only">
+                Registro de eventos
+            </h2>
+
+            <ol
+                id="event-log-list"
+                aria-live="polite"
+                aria-relevant="additions"
+                aria-atomic="false"
+            ></ol>
+        </section>
+
+
+        <!-- ============================================================
+             CONTROLES DE ACESSIBILIDADE
+             ============================================================ -->
+
+        <section
+            id="accessibility-controls"
+            class="accessibility-controls"
+            aria-labelledby="accessibility-controls-title"
+        >
+            <h2 id="accessibility-controls-title" class="sr-only">
+                Controles de acessibilidade
+            </h2>
+
+            <button
+                id="toggle-speech"
+                type="button"
+                aria-pressed="true"
+                aria-label="Ativar ou desativar narração"
+            >
+                Narração ativada
+            </button>
+
+            <button
+                id="repeat-description"
+                type="button"
+                aria-label="Repetir descrição atual do ambiente"
+            >
+                Repetir descrição
+            </button>
+
+            <button
+                id="announce-status"
+                type="button"
+                aria-label="Ouvir o status atual do jogador"
+            >
+                Ouvir status
+            </button>
+        </section>
+
+
+        <!-- ============================================================
+             INDICADOR DE CARREGAMENTO
+             ============================================================ -->
+
+        <div
+            id="loading-state"
+            class="loading-state"
+            role="status"
+            aria-live="polite"
+            aria-atomic="true"
+        >
+            <span id="loading-text">
+                Inicializando ECHO//NULL...
+            </span>
+        </div>
+
+
+        <!-- ============================================================
+             REGIÃO PARA CONTROLE DE FOCO
+             ============================================================ -->
+
+        <div
+            id="focus-anchor"
+            class="focus-anchor"
+            tabindex="-1"
+            aria-hidden="true"
+        ></div>
+
+
+        <!-- ============================================================
+             AVISO PARA TECNOLOGIAS / NAVEGADORES INCOMPATÍVEIS
+             ============================================================ -->
+
+        <noscript>
+            <section
+                id="javascript-disabled"
+                class="compatibility-warning"
+                aria-labelledby="javascript-disabled-title"
+            >
+                <h2 id="javascript-disabled-title">
+                    JavaScript necessário
+                </h2>
+
+                <p>
+                    O ECHO//NULL depende de JavaScript para funcionar.
+                    Ative o JavaScript no seu navegador e recarregue a página
+                    para iniciar o jogo.
+                </p>
+            </section>
+        </noscript>
+
+
+        <!-- ============================================================
+             AVISO DE COMPATIBILIDADE DO NAVEGADOR
+             ============================================================ -->
+
+        <section
+            id="unsupported-browser"
+            class="compatibility-warning"
+            aria-labelledby="unsupported-browser-title"
+            hidden
+        >
+            <h2 id="unsupported-browser-title">
+                Navegador incompatível
+            </h2>
+
+            <p id="unsupported-browser-message">
+                Este navegador não oferece todos os recursos necessários
+                para executar o ECHO//NULL corretamente.
+            </p>
+
+            <p>
+                Recomendamos utilizar uma versão atualizada de um navegador
+                compatível com Web Audio API, Web Speech API e Gamepad API.
+            </p>
+        </section>
+
+
+        <!-- ============================================================
+             ELEMENTOS INTERNOS DO MOTOR DO JOGO
+             Não possuem apresentação visual própria.
+             ============================================================ -->
+
+        <div
+            id="game-engine"
+            aria-hidden="true"
+            hidden
+        >
+            <div id="audio-engine"></div>
+            <div id="input-engine"></div>
+            <div id="state-engine"></div>
+            <div id="world-engine"></div>
+        </div>
+
+
+        <!-- ============================================================
+             REFERÊNCIA INTERNA DO JOGO
+             ============================================================ -->
+
+        <div
+            id="game-version"
+            data-game="ECHO//NULL"
+            data-version="1.0.0"
+            data-accessibility="blind-first"
+            hidden
+        ></div>
+
+
+        <!-- ============================================================
+             FIM DO SISTEMA DE GAMEPLAY
+             ============================================================ -->
+
     </main>
 
 
-    <!-- ============================================================
-         LOADING / BOOT
-         ============================================================ -->
+    <!-- ================================================================
+         SCRIPTS DO ECHO//NULL
+         A ordem de carregamento é importante.
+         ================================================================= -->
 
-    <div
-        id="boot-screen"
-        class="boot-screen"
-        role="status"
-        aria-live="polite"
-    >
-
-        <p id="boot-message">
-            Inicializando ECHO//NULL...
-        </p>
-
-    </div>
-
-
-    <!--
-        ============================================================
-        JAVASCRIPT
-        ============================================================
-
-        Por enquanto o arquivo pode estar vazio.
-
-        Na próxima etapa vamos construir o Game Core.
-        ============================================================
-    -->
-
+    <!-- Núcleo de acessibilidade -->
     <script
-        type="module"
-        src="./src/main.js"
+        src="/src/js/accessibility.js"
+        defer
     ></script>
+
+    <!-- Sistema de áudio espacial e feedback sonoro -->
+    <script
+        src="/src/js/audio.js"
+        defer
+    ></script>
+
+    <!-- Sistema de voz / Web Speech API -->
+    <script
+        src="/src/js/speech.js"
+        defer
+    ></script>
+
+    <!-- Sistema de controles e Gamepad API -->
+    <script
+        src="/src/js/input.js"
+        defer
+    ></script>
+
+    <!-- Sistema de estado do jogador -->
+    <script
+        src="/src/js/player.js"
+        defer
+    ></script>
+
+    <!-- Sistema de mundo / ambiente -->
+    <script
+        src="/src/js/world.js"
+        defer
+    ></script>
+
+    <!-- Sistema principal do jogo -->
+    <script
+        src="/src/js/game.js"
+        defer
+    ></script>
+
+    <!-- Inicializador principal -->
+    <script
+        src="/src/js/main.js"
+        defer
+    ></script>
+
 
 </body>
 </html>
