@@ -8,13 +8,15 @@
 </head>
 <body>
 
-    <!-- Link para pular para o conteúdo principal (Essencial para leitores de tela e teclado) -->
+    <!-- Link de atalho para ignorar menus (Acessibilidade via Teclado) -->
     <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
 
-    <!-- Barra de Ferramentas de Acessibilidade -->
+    <!-- Painel de Acessibilidade e Assistência por Voz -->
     <aside aria-label="Ferramentas de Acessibilidade" class="accessibility-toolbar">
         <div class="container toolbar-content">
             <span class="toolbar-title" id="label-acessibilidade">Painel de Acessibilidade:</span>
+            
+            <!-- Controles Visuais -->
             <div class="toolbar-controls" role="group" aria-labelledby="label-acessibilidade">
                 <button id="btn-aumentar-fonte" class="btn-tool" aria-label="Aumentar tamanho da fonte">A+</button>
                 <button id="btn-diminuir-fonte" class="btn-tool" aria-label="Diminuir tamanho da fonte">A-</button>
@@ -22,6 +24,14 @@
                 <button id="btn-contraste-ampliado" class="btn-tool" aria-pressed="false">Contraste Ampliado</button>
                 <button id="btn-reduzir-animacao" class="btn-tool" aria-pressed="false">Reduzir Animações</button>
                 <button id="btn-restaurar" class="btn-tool">Restaurar Padrões</button>
+            </div>
+
+            <!-- Controles do Assistente de Voz Nativo -->
+            <div class="toolbar-controls voice-controls" role="group" aria-label="Controles do Assistente por Voz">
+                <button id="btn-voice-toggle" class="btn-tool" aria-pressed="false">Ativar Voz</button>
+                <button id="btn-sound-toggle" class="btn-tool" aria-pressed="true">Som de Navegação</button>
+                <button id="btn-test-voice" class="btn-tool">Testar Voz</button>
+                <button id="btn-stop-voice" class="btn-tool">Parar Voz</button>
             </div>
         </div>
     </aside>
@@ -106,7 +116,7 @@
                     <li><strong>Pular Conteúdo:</strong> Pressione <kbd>Tab</kbd> logo ao abrir a página para ativar o link "Pular para o conteúdo principal".</li>
                     <li><strong>Navegar entre links e botões:</strong> Utilize a tecla <kbd>Tab</kbd> para avançar e <kbd>Shift + Tab</kbd> para retornar.</li>
                     <li><strong>Ativar elementos:</strong> Pressione a tecla <kbd>Enter</kbd> ou <kbd>Espaço</kbd> em botões e links.</li>
-                    <li><strong>Fechar menus ou modais:</strong> Pressione a tecla <kbd>Esc</kbd>.</li>
+                    <li><strong>Fechar menus ou interromper voz:</strong> Pressione a tecla <kbd>Esc</kbd>.</li>
                 </ul>
             </div>
         </section>
@@ -117,7 +127,7 @@
                 <h2>Fale Conosco</h2>
                 <p>Preencha o formulário abaixo para enviar sua dúvida ou sugestão. Os campos obrigatórios estão sinalizados.</p>
                 
-                <!-- Área de anúncios dinâmicos para leitores de tela -->
+                <!-- Área de anúncios dinâmicos (Região Live para leitores de tela) -->
                 <div id="form-feedback" class="sr-only" aria-live="polite"></div>
 
                 <form id="contact-form" class="accessibility-form" novalidate>
