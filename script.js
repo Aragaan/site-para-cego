@@ -1,311 +1,1099 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
+    "use strict";
 
-    // ==========================================
-    // 1. GERENCIADOR DE STORAGE
-    // ==========================================
-    class StorageManager {
-        static get(key, defaultValue) {
+    /* =========================================================
+       ACCESSIBILITYWEB
+       Sistema principal de acessibilidade e interação
+       ========================================================= */
+
+
+    /* =========================================================
+       1. STORAGE
+       ========================================================= */
+
+    const STORAGE_PREFIX = "a11y_";
+
+    const Storage = {
+        get(key, fallback = null) {
             try {
-                const value = localStorage.getItem(`a11y_${key}`);
-                return value !== null ? JSON.parse(value) : defaultValue;
-            } catch (e) { return defaultValue; }
-        }
-        static set(key, value) {
-            try { localStorage.setItem(`a11y_${key}`, JSON.stringify(value)); } catch (e) {}
-        }
-        static clear() {
+                const value = localStorage.getItem(`${STORAGE_PREFIX}${key}`);
+
+                if (value === null) {
+                    return fallback;
+                }
+
+                return JSON.parse(value);
+            } catch (error) {
+                console.warn(`Não foi possível ler "${key}" do armazenamento.`);
+                return fallback;
+            }
+        },
+
+        set(key, value) {
             try {
-                Object.keys(localStorage).forEach(key => {
-                    if (key.startsWith('a11y_')) localStorage.removeItem(key);
-                });
-            } catch (e) {}
+                localStorage.setItem(
+                    `${STORAGE_PREFIX}${key}`,
+                    JSON.stringify(value)
+                );
+            } catch (error) {
+                console.warn(`Não foi possível salvar "${key}".`);
+            }
+        },
+
+        clear() {
+            try {
+                Object.keys(localStorage)
+                    .filter(key => key.startsWith(STORAGE_PREFIX))
+                    .forEach(key => localStorage.removeItem(key));
+            } catch (error) {
+                console.warn("Não foi possível limpar as configurações.");
+            }
+        }
+    };
+
+
+    /* =========================================================
+       2. ELEMENTOS PRINCIPAIS
+       ========================================================= */
+
+    const html = document.documentElement;
+
+    const statusRegion =
+        document.getElementById("accessibility-status");
+
+    const elements = {
+        increaseFont: document.getElementById("btn-aumentar-fonte"),
+        decreaseFont: document.getElementById("btn-diminuir-fonte"),
+
+        highContrast:
+            document.getElementById("btn-alto-contraste"),
+
+        amplifiedContrast:
+            document.getElementById("btn-contraste-ampliado"),
+
+        reducedMotion:
+            document.getElementById("btn-reduzir-animacao"),
+
+        voice:
+            document.getElementById("btn-toggle-voz"),
+
+        sound:
+            document.getElementById("btn-som-navegacao"),
+
+        testVoice:
+            document.getElementById("btn-testar-voz"),
+
+        stopVoice:
+            document.getElementById("btn-parar-voz"),
+
+        reset:
+            document.getElementById("btn-restaurar"),
+
+        menu:
+            document.getElementById("btn-menu-mobile"),
+
+        navigation:
+            document.getElementById("main-nav"),
+
+        searchForm:
+            document.querySelector(".search-form"),
+
+        searchInput:
+            document.getElementById("search-input"),
+
+        newsletter:
+            document.querySelector(".newsletter-form")
+    };
+
+
+    /* =========================================================
+       3. SISTEMA DE ANÚNCIOS ACESSÍVEIS
+       ========================================================= */
+
+    let announcementTimer = null;
+
+    function announce(message, speak = false) {
+        if (!message) return;
+
+        if (statusRegion) {
+            clearTimeout(announcementTimer);
+
+            statusRegion.textContent = "";
+
+            announcementTimer = setTimeout(() => {
+                statusRegion.textContent = message;
+            }, 50);
+        }
+
+        if (speak && accessibilityVoice.isEnabled()) {
+            accessibilityVoice.speak(message);
         }
     }
 
-    // ==========================================
-    // 2. SISTEMA CENTRAL DE VOZ (Intacto)
-    // ==========================================
-    class SpeechSystem {
+
+    /* =========================================================
+       4. SISTEMA DE VOZ
+       ========================================================= */
+
+    class AccessibilityVoice {
+
         constructor() {
-            this.synth = window.speechSynthesis;
-            this.voiceEnabled = StorageManager.get('voiceEnabled', false);
-            this.speechRate = StorageManager.get('speechRate', 1.0);
-            this.speechVolume = StorageManager.get('speechVolume', 1.0);
-            this.preferredVoice = null;
-            this.statusRegion = document.getElementById('accessibility-status');
-            
+            this.synth =
+                "speechSynthesis" in window
+                    ? window.speechSynthesis
+                    : null;
+
+            this.enabled =
+                Storage.get("voiceEnabled", false);
+
+            this.rate =
+                Storage.get("speechRate", 1);
+
+            this.volume =
+                Storage.get("speechVolume", 1);
+
+            this.voice = null;
+
             this.loadVoices();
-            if (this.synth.onvoiceschanged !== undefined) {
-                this.synth.onvoiceschanged = () => this.loadVoices();
+
+            if (this.synth) {
+                this.synth.addEventListener(
+                    "voiceschanged",
+                    () => this.loadVoices()
+                );
             }
-            this.updateVoiceButtonUI();
+
+            this.updateButton();
         }
+
 
         loadVoices() {
+            if (!this.synth) return;
+
             const voices = this.synth.getVoices();
-            if (voices.length > 0) {
-                this.preferredVoice = voices.find(v => v.lang === 'pt-BR' || v.lang === 'pt_BR') || 
-                                      voices.find(v => v.lang === 'pt-PT') || 
-                                      voices[0];
-            }
+
+            if (!voices.length) return;
+
+            this.voice =
+                voices.find(voice =>
+                    voice.lang.toLowerCase() === "pt-br"
+                ) ||
+
+                voices.find(voice =>
+                    voice.lang.toLowerCase().startsWith("pt")
+                ) ||
+
+                voices[0];
         }
 
-        speak(message, force = false) {
-            if (this.statusRegion && message) {
-                this.statusRegion.textContent = ''; 
-                setTimeout(() => { this.statusRegion.textContent = message; }, 50);
+
+        isEnabled() {
+            return this.enabled;
+        }
+
+
+        speak(text, force = false) {
+
+            if (!this.synth || !text) return;
+
+            if (!this.enabled && !force) {
+                announce(text, false);
+                return;
             }
 
-            if (!this.voiceEnabled && !force) return;
+            this.synth.cancel();
 
-            this.synth.cancel(); // Cancela para não sobrepor
-            if (!message) return;
+            const utterance =
+                new SpeechSynthesisUtterance(text);
 
-            const utterance = new SpeechSynthesisUtterance(message);
-            utterance.lang = 'pt-BR';
-            utterance.rate = this.speechRate;
-            utterance.volume = this.speechVolume;
-            
-            if (this.preferredVoice) utterance.voice = this.preferredVoice;
+            utterance.lang = "pt-BR";
+            utterance.rate = this.rate;
+            utterance.volume = this.volume;
+
+            if (this.voice) {
+                utterance.voice = this.voice;
+            }
+
             this.synth.speak(utterance);
         }
 
-        stop() { this.synth.cancel(); }
 
-        toggleVoice() {
-            this.voiceEnabled = !this.voiceEnabled;
-            StorageManager.set('voiceEnabled', this.voiceEnabled);
-            this.updateVoiceButtonUI();
-            if (this.voiceEnabled) {
-                this.speak("Voz ativada.", true);
+        stop() {
+            if (this.synth) {
+                this.synth.cancel();
+            }
+        }
+
+
+        toggle() {
+
+            this.enabled = !this.enabled;
+
+            Storage.set(
+                "voiceEnabled",
+                this.enabled
+            );
+
+            this.updateButton();
+
+            if (this.enabled) {
+                this.speak(
+                    "Leitura por voz ativada.",
+                    true
+                );
             } else {
-                this.speak("Voz desativada.", true);
-                setTimeout(() => this.stop(), 1500);
+                this.speak(
+                    "Leitura por voz desativada.",
+                    true
+                );
             }
         }
 
-        updateVoiceButtonUI() {
-            const btn = document.getElementById('btn-toggle-voz');
-            if (btn) {
-                btn.setAttribute('aria-pressed', this.voiceEnabled);
-                btn.innerHTML = this.voiceEnabled ? "🔈 Silenciar" : "🔊 Voz";
-                btn.setAttribute('aria-label', this.voiceEnabled ? "Desativar Voz" : "Ativar Voz");
-            }
+
+        updateButton() {
+
+            if (!elements.voice) return;
+
+            elements.voice.setAttribute(
+                "aria-pressed",
+                String(this.enabled)
+            );
+
+            elements.voice.setAttribute(
+                "aria-label",
+                this.enabled
+                    ? "Desativar leitura por voz"
+                    : "Ativar leitura por voz"
+            );
+
+            elements.voice.textContent =
+                this.enabled
+                    ? "🔈 Silenciar"
+                    : "🔊 Voz";
         }
     }
 
-    // ==========================================
-    // 3. GERENCIADOR DE SOM DE NAVEGAÇÃO (Intacto)
-    // ==========================================
-    class SoundSystem {
+
+    const accessibilityVoice =
+        new AccessibilityVoice();
+
+
+    /* =========================================================
+       5. SISTEMA DE SOM
+       ========================================================= */
+
+    class NavigationSound {
+
         constructor() {
-            this.soundEnabled = StorageManager.get('soundEnabled', false);
-            this.audioCtx = null;
-            this.updateSoundButtonUI();
+            this.enabled =
+                Storage.get("soundEnabled", false);
+
+            this.audioContext = null;
+
+            this.updateButton();
         }
 
-        playBeep() {
-            if (!this.soundEnabled) return;
+
+        createContext() {
+
+            if (this.audioContext) {
+                return this.audioContext;
+            }
+
+            const AudioContext =
+                window.AudioContext ||
+                window.webkitAudioContext;
+
+            if (!AudioContext) {
+                return null;
+            }
+
+            this.audioContext =
+                new AudioContext();
+
+            return this.audioContext;
+        }
+
+
+        play() {
+
+            if (!this.enabled) return;
+
             try {
-                if (!this.audioCtx) {
-                    const AudioContext = window.AudioContext || window.webkitAudioContext;
-                    this.audioCtx = new AudioContext();
+
+                const context =
+                    this.createContext();
+
+                if (!context) return;
+
+                if (context.state === "suspended") {
+                    context.resume();
                 }
-                if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
-                const osc = this.audioCtx.createOscillator();
-                const gain = this.audioCtx.createGain();
-                osc.type = 'sine';
-                osc.frequency.setValueAtTime(440, this.audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime);
-                osc.connect(gain);
-                gain.connect(this.audioCtx.destination);
-                osc.start();
-                osc.stop(this.audioCtx.currentTime + 0.05);
-            } catch (e) {}
-        }
 
-        toggleSound() {
-            this.soundEnabled = !this.soundEnabled;
-            StorageManager.set('soundEnabled', this.soundEnabled);
-            this.updateSoundButtonUI();
-            return this.soundEnabled;
-        }
+                const oscillator =
+                    context.createOscillator();
 
-        updateSoundButtonUI() {
-            const btn = document.getElementById('btn-som-navegacao');
-            if (btn) btn.setAttribute('aria-pressed', this.soundEnabled);
-        }
-    }
+                const gain =
+                    context.createGain();
 
-    const speech = new SpeechSystem();
-    const sound = new SoundSystem();
+                oscillator.type = "sine";
 
-    // ==========================================
-    // 4. IDENTIFICAÇÃO E FOCO DE TECLADO
-    // ==========================================
-    let lastKeyAction = null;
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Tab') lastKeyAction = e.shiftKey ? 'shift-tab' : 'tab';
-        else if (e.key === 'Enter' || e.key === ' ') lastKeyAction = 'activate';
-        else if (e.key === 'Escape') closeMobileMenu(); // ESC para fechar menu
-    });
-    document.addEventListener('mousedown', () => { lastKeyAction = 'mouse'; });
+                oscillator.frequency.setValueAtTime(
+                    520,
+                    context.currentTime
+                );
 
-    function getAccessibleDescription(el) {
-        let name = el.getAttribute('aria-label') || el.innerText || el.value || el.title || '';
-        name = name.trim();
-        if (!name) return '';
+                gain.gain.setValueAtTime(
+                    0.035,
+                    context.currentTime
+                );
 
-        let role = 'Elemento';
-        if (el.tagName === 'BUTTON' || el.getAttribute('role') === 'button') role = 'Botão';
-        else if (el.tagName === 'A') role = 'Link';
-        else if (el.tagName === 'INPUT') {
-            if (el.type === 'checkbox') role = 'Caixa de seleção';
-            else if (el.type === 'search' || el.type === 'text') role = 'Campo de texto';
-            else role = 'Campo de formulário';
-        }
+                oscillator.connect(gain);
+                gain.connect(context.destination);
 
-        let state = '';
-        if (el.hasAttribute('aria-pressed')) {
-            state = el.getAttribute('aria-pressed') === 'true' ? 'ativado' : 'desativado';
-        } else if (el.type === 'checkbox') {
-            state = el.checked ? 'marcada' : 'desmarcada';
-        } else if (el.hasAttribute('aria-expanded')) {
-            state = el.getAttribute('aria-expanded') === 'true' ? 'expandido' : 'recolhido';
-        }
+                oscillator.start();
 
-        return `${name}. ${role}.${state ? ' ' + state + '.' : ''}`;
-    }
+                oscillator.stop(
+                    context.currentTime + 0.06
+                );
 
-    document.addEventListener('focusin', (e) => {
-        if (lastKeyAction === 'tab' || lastKeyAction === 'shift-tab') {
-            const desc = getAccessibleDescription(e.target);
-            if (desc) {
-                const prefix = lastKeyAction === 'tab' ? 'Tab. ' : 'Voltando. ';
-                speech.speak(prefix + desc);
-                sound.playBeep();
+            } catch (error) {
+                console.warn(
+                    "Não foi possível reproduzir o som."
+                );
             }
         }
-    });
 
-    // ==========================================
-    // 5. AÇÕES DE ACESSIBILIDADE DO PORTAL
-    // ==========================================
-    const rootHtml = document.documentElement;
-    let currentFontSize = StorageManager.get('fontSize', 1);
-    rootHtml.style.setProperty('--font-scale', `${currentFontSize}rem`);
 
-    document.getElementById('btn-aumentar-fonte')?.addEventListener('click', () => {
-        if (currentFontSize < 1.8) currentFontSize += 0.1;
-        rootHtml.style.setProperty('--font-scale', `${currentFontSize}rem`);
-        StorageManager.set('fontSize', currentFontSize);
-        speech.speak("A mais. Tamanho da fonte aumentado.");
-    });
+        toggle() {
 
-    document.getElementById('btn-diminuir-fonte')?.addEventListener('click', () => {
-        if (currentFontSize > 0.8) currentFontSize -= 0.1;
-        rootHtml.style.setProperty('--font-scale', `${currentFontSize}rem`);
-        StorageManager.set('fontSize', currentFontSize);
-        speech.speak("A menos. Tamanho da fonte diminuído.");
-    });
+            this.enabled = !this.enabled;
 
-    document.getElementById('btn-alto-contraste')?.addEventListener('click', (e) => {
-        const isTargetState = rootHtml.getAttribute('data-theme') !== 'high-contrast';
-        rootHtml.setAttribute('data-theme', isTargetState ? 'high-contrast' : 'default');
-        e.target.setAttribute('aria-pressed', isTargetState);
-        document.getElementById('btn-contraste-ampliado')?.setAttribute('aria-pressed', 'false');
-        StorageManager.set('theme', isTargetState ? 'high-contrast' : 'default');
-        speech.speak(isTargetState ? "Alto contraste ativado." : "Alto contraste desativado.");
-    });
+            Storage.set(
+                "soundEnabled",
+                this.enabled
+            );
 
-    document.getElementById('btn-contraste-ampliado')?.addEventListener('click', (e) => {
-        const isTargetState = rootHtml.getAttribute('data-theme') !== 'amplified-contrast';
-        rootHtml.setAttribute('data-theme', isTargetState ? 'amplified-contrast' : 'default');
-        e.target.setAttribute('aria-pressed', isTargetState);
-        document.getElementById('btn-alto-contraste')?.setAttribute('aria-pressed', 'false');
-        StorageManager.set('theme', isTargetState ? 'amplified-contrast' : 'default');
-        speech.speak(isTargetState ? "Contraste ampliado ativado." : "Contraste ampliado desativado.");
-    });
+            this.updateButton();
 
-    document.getElementById('btn-reduzir-animacao')?.addEventListener('click', (e) => {
-        const isTargetState = rootHtml.getAttribute('data-reduced-motion') !== 'true';
-        rootHtml.setAttribute('data-reduced-motion', isTargetState);
-        e.target.setAttribute('aria-pressed', isTargetState);
-        StorageManager.set('reducedMotion', isTargetState);
-        speech.speak(isTargetState ? "Redução de animações ativada." : "Redução de animações desativada.");
-    });
+            if (this.enabled) {
+                this.play();
+            }
 
-    document.getElementById('btn-toggle-voz')?.addEventListener('click', () => speech.toggleVoice());
-    document.getElementById('btn-testar-voz')?.addEventListener('click', () => speech.speak("Teste de voz realizado com sucesso. O sistema de acessibilidade está funcionando.", true));
-    document.getElementById('btn-parar-voz')?.addEventListener('click', () => speech.stop());
-    document.getElementById('btn-som-navegacao')?.addEventListener('click', () => {
-        const isEnabled = sound.toggleSound();
-        speech.speak(isEnabled ? "Som de navegação ativado." : "Som de navegação desativado.");
-    });
+            return this.enabled;
+        }
 
-    document.getElementById('btn-restaurar')?.addEventListener('click', () => {
-        StorageManager.clear();
-        rootHtml.style.setProperty('--font-scale', '1rem');
-        rootHtml.setAttribute('data-theme', 'default');
-        rootHtml.removeAttribute('data-reduced-motion');
-        currentFontSize = 1;
-        document.querySelectorAll('.a11y-btn[aria-pressed]').forEach(b => b.setAttribute('aria-pressed', 'false'));
-        speech.voiceEnabled = false;
-        speech.updateVoiceButtonUI();
-        sound.soundEnabled = false;
-        sound.updateSoundButtonUI();
-        speech.speak("Configurações restauradas para o padrão.", true);
-    });
 
-    // Aplica configurações iniciais no carregamento sem falar
-    const savedTheme = StorageManager.get('theme', 'default');
-    if (savedTheme !== 'default') {
-        rootHtml.setAttribute('data-theme', savedTheme);
-        const btnId = savedTheme === 'high-contrast' ? 'btn-alto-contraste' : 'btn-contraste-ampliado';
-        document.getElementById(btnId)?.setAttribute('aria-pressed', 'true');
-    }
-    if (StorageManager.get('reducedMotion', false)) {
-        rootHtml.setAttribute('data-reduced-motion', 'true');
-        document.getElementById('btn-reduzir-animacao')?.setAttribute('aria-pressed', 'true');
-    }
+        updateButton() {
 
-    // ==========================================
-    // 6. INTERAÇÕES DE UI DO PORTAL
-    // ==========================================
-    
-    // Formulários - Evitar submit padrão para demonstração
-    document.querySelector('.search-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        speech.speak("Executando busca no portal.");
-    });
+            if (!elements.sound) return;
 
-    document.querySelector('.newsletter-form')?.addEventListener('submit', (e) => {
-        e.preventDefault();
-        speech.speak("Inscrição realizada com sucesso.");
-    });
-
-    // Menu Mobile Responsivo e Acessível
-    const btnMenu = document.getElementById('btn-menu-mobile');
-    const mainNav = document.getElementById('main-nav');
-
-    function closeMobileMenu() {
-        if (btnMenu && btnMenu.getAttribute('aria-expanded') === 'true') {
-            btnMenu.setAttribute('aria-expanded', 'false');
-            mainNav.classList.remove('is-open');
-            speech.speak("Menu fechado.");
+            elements.sound.setAttribute(
+                "aria-pressed",
+                String(this.enabled)
+            );
         }
     }
 
-    btnMenu?.addEventListener('click', () => {
-        const isOpen = btnMenu.getAttribute('aria-expanded') === 'true';
-        btnMenu.setAttribute('aria-expanded', !isOpen);
-        if (!isOpen) {
-            mainNav.classList.add('is-open');
-            speech.speak("Menu expandido.");
+
+    const navigationSound =
+        new NavigationSound();
+
+
+    /* =========================================================
+       6. TAMANHO DA FONTE
+       ========================================================= */
+
+    let fontScale =
+        Storage.get("fontSize", 1);
+
+
+    function applyFontScale() {
+
+        fontScale =
+            Math.min(
+                Math.max(fontScale, 0.8),
+                1.8
+            );
+
+        html.style.setProperty(
+            "--font-scale",
+            `${fontScale}rem`
+        );
+
+        Storage.set(
+            "fontSize",
+            fontScale
+        );
+    }
+
+
+    elements.increaseFont?.addEventListener(
+        "click",
+        () => {
+
+            if (fontScale < 1.8) {
+                fontScale =
+                    Math.round(
+                        (fontScale + 0.1) * 10
+                    ) / 10;
+            }
+
+            applyFontScale();
+
+            announce(
+                `Tamanho do texto aumentado para ${Math.round(fontScale * 100)}%.`,
+                true
+            );
+        }
+    );
+
+
+    elements.decreaseFont?.addEventListener(
+        "click",
+        () => {
+
+            if (fontScale > 0.8) {
+                fontScale =
+                    Math.round(
+                        (fontScale - 0.1) * 10
+                    ) / 10;
+            }
+
+            applyFontScale();
+
+            announce(
+                `Tamanho do texto reduzido para ${Math.round(fontScale * 100)}%.`,
+                true
+            );
+        }
+    );
+
+
+    /* =========================================================
+       7. SISTEMA DE CONTRASTE
+       ========================================================= */
+
+    function setTheme(theme) {
+
+        if (theme === "default") {
+            html.removeAttribute("data-theme");
         } else {
-            mainNav.classList.remove('is-open');
-            speech.speak("Menu recolhido.");
+            html.setAttribute(
+                "data-theme",
+                theme
+            );
         }
+
+        Storage.set("theme", theme);
+
+        updateThemeButtons();
+    }
+
+
+    function updateThemeButtons() {
+
+        const theme =
+            html.getAttribute("data-theme") ||
+            "default";
+
+        if (elements.highContrast) {
+            elements.highContrast.setAttribute(
+                "aria-pressed",
+                String(theme === "high-contrast")
+            );
+        }
+
+        if (elements.amplifiedContrast) {
+            elements.amplifiedContrast.setAttribute(
+                "aria-pressed",
+                String(theme === "amplified-contrast")
+            );
+        }
+    }
+
+
+    elements.highContrast?.addEventListener(
+        "click",
+        () => {
+
+            const active =
+                html.getAttribute("data-theme") ===
+                "high-contrast";
+
+            setTheme(
+                active
+                    ? "default"
+                    : "high-contrast"
+            );
+
+            announce(
+                active
+                    ? "Alto contraste desativado."
+                    : "Alto contraste ativado.",
+                true
+            );
+        }
+    );
+
+
+    elements.amplifiedContrast?.addEventListener(
+        "click",
+        () => {
+
+            const active =
+                html.getAttribute("data-theme") ===
+                "amplified-contrast";
+
+            setTheme(
+                active
+                    ? "default"
+                    : "amplified-contrast"
+            );
+
+            announce(
+                active
+                    ? "Contraste ampliado desativado."
+                    : "Contraste ampliado ativado.",
+                true
+            );
+        }
+    );
+
+
+    /* =========================================================
+       8. REDUÇÃO DE ANIMAÇÕES
+       ========================================================= */
+
+    function setReducedMotion(enabled) {
+
+        if (enabled) {
+            html.setAttribute(
+                "data-reduced-motion",
+                "true"
+            );
+        } else {
+            html.removeAttribute(
+                "data-reduced-motion"
+            );
+        }
+
+        Storage.set(
+            "reducedMotion",
+            enabled
+        );
+
+        if (elements.reducedMotion) {
+            elements.reducedMotion.setAttribute(
+                "aria-pressed",
+                String(enabled)
+            );
+        }
+    }
+
+
+    elements.reducedMotion?.addEventListener(
+        "click",
+        () => {
+
+            const enabled =
+                html.getAttribute(
+                    "data-reduced-motion"
+                ) !== "true";
+
+            setReducedMotion(enabled);
+
+            announce(
+                enabled
+                    ? "Redução de animações ativada."
+                    : "Redução de animações desativada.",
+                true
+            );
+        }
+    );
+
+
+    /* =========================================================
+       9. CONTROLES DE VOZ
+       ========================================================= */
+
+    elements.voice?.addEventListener(
+        "click",
+        () => {
+            accessibilityVoice.toggle();
+        }
+    );
+
+
+    elements.testVoice?.addEventListener(
+        "click",
+        () => {
+
+            accessibilityVoice.speak(
+                "Teste realizado com sucesso. A leitura por voz do AccessibilityWeb está funcionando corretamente.",
+                true
+            );
+        }
+    );
+
+
+    elements.stopVoice?.addEventListener(
+        "click",
+        () => {
+
+            accessibilityVoice.stop();
+
+            announce(
+                "Leitura interrompida."
+            );
+        }
+    );
+
+
+    /* =========================================================
+       10. SOM DE NAVEGAÇÃO
+       ========================================================= */
+
+    elements.sound?.addEventListener(
+        "click",
+        () => {
+
+            const enabled =
+                navigationSound.toggle();
+
+            announce(
+                enabled
+                    ? "Som de navegação ativado."
+                    : "Som de navegação desativado.",
+                true
+            );
+        }
+    );
+
+
+    /* =========================================================
+       11. RESTAURAR CONFIGURAÇÕES
+       ========================================================= */
+
+    elements.reset?.addEventListener(
+        "click",
+        () => {
+
+            const confirmed =
+                window.confirm(
+                    "Deseja restaurar todas as configurações de acessibilidade?"
+                );
+
+            if (!confirmed) {
+                return;
+            }
+
+            Storage.clear();
+
+            fontScale = 1;
+
+            html.style.setProperty(
+                "--font-scale",
+                "1rem"
+            );
+
+            setTheme("default");
+            setReducedMotion(false);
+
+            accessibilityVoice.enabled = false;
+            accessibilityVoice.updateButton();
+            accessibilityVoice.stop();
+
+            navigationSound.enabled = false;
+            navigationSound.updateButton();
+
+            announce(
+                "Todas as configurações de acessibilidade foram restauradas.",
+                true
+            );
+        }
+    );
+
+
+    /* =========================================================
+       12. MENU MOBILE
+       ========================================================= */
+
+    function openMenu() {
+
+        if (!elements.menu || !elements.navigation) {
+            return;
+        }
+
+        elements.menu.setAttribute(
+            "aria-expanded",
+            "true"
+        );
+
+        elements.menu.setAttribute(
+            "aria-label",
+            "Fechar menu de navegação"
+        );
+
+        elements.navigation.classList.add(
+            "is-open"
+        );
+
+        announce(
+            "Menu de navegação aberto.",
+            true
+        );
+    }
+
+
+    function closeMenu() {
+
+        if (!elements.menu || !elements.navigation) {
+            return;
+        }
+
+        elements.menu.setAttribute(
+            "aria-expanded",
+            "false"
+        );
+
+        elements.menu.setAttribute(
+            "aria-label",
+            "Abrir menu de navegação"
+        );
+
+        elements.navigation.classList.remove(
+            "is-open"
+        );
+    }
+
+
+    function toggleMenu() {
+
+        const isOpen =
+            elements.menu?.getAttribute(
+                "aria-expanded"
+            ) === "true";
+
+        if (isOpen) {
+            closeMenu();
+
+            announce(
+                "Menu de navegação fechado.",
+                true
+            );
+        } else {
+            openMenu();
+        }
+    }
+
+
+    elements.menu?.addEventListener(
+        "click",
+        toggleMenu
+    );
+
+
+    /* Fecha menu com ESC */
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Escape") {
+
+                const isOpen =
+                    elements.menu?.getAttribute(
+                        "aria-expanded"
+                    ) === "true";
+
+                if (isOpen) {
+                    closeMenu();
+
+                    elements.menu.focus();
+
+                    announce(
+                        "Menu fechado."
+                    );
+                }
+            }
+        }
+    );
+
+
+    /* Fecha menu ao clicar em um link */
+
+    elements.navigation?.querySelectorAll("a")
+        .forEach(link => {
+
+            link.addEventListener(
+                "click",
+                () => {
+
+                    if (
+                        window.innerWidth <= 768
+                    ) {
+                        closeMenu();
+                    }
+                }
+            );
+        });
+
+
+    /* =========================================================
+       13. PESQUISA
+       ========================================================= */
+
+    elements.searchForm?.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+            const query =
+                elements.searchInput?.value.trim();
+
+            if (!query) {
+
+                announce(
+                    "Digite algo no campo de pesquisa.",
+                    true
+                );
+
+                elements.searchInput?.focus();
+
+                return;
+            }
+
+            announce(
+                `Pesquisa realizada por: ${query}.`,
+                true
+            );
+        }
+    );
+
+
+    /* =========================================================
+       14. NEWSLETTER
+       ========================================================= */
+
+    elements.newsletter?.addEventListener(
+        "submit",
+        event => {
+
+            event.preventDefault();
+
+            const name =
+                document.getElementById(
+                    "news-nome"
+                )?.value.trim();
+
+            const email =
+                document.getElementById(
+                    "news-email"
+                )?.value.trim();
+
+            if (!name || !email) {
+
+                announce(
+                    "Preencha todos os campos obrigatórios.",
+                    true
+                );
+
+                return;
+            }
+
+            announce(
+                `Obrigado, ${name}. Sua inscrição foi realizada com sucesso.`,
+                true
+            );
+
+            elements.newsletter.reset();
+        }
+    );
+
+
+    /* =========================================================
+       15. FOCO E TECLADO
+       ========================================================= */
+
+    let keyboardNavigation = false;
+
+
+    document.addEventListener(
+        "keydown",
+        event => {
+
+            if (event.key === "Tab") {
+                keyboardNavigation = true;
+            }
+        }
+    );
+
+
+    document.addEventListener(
+        "mousedown",
+        () => {
+            keyboardNavigation = false;
+        }
+    );
+
+
+    document.addEventListener(
+        "focusin",
+        event => {
+
+            if (!keyboardNavigation) {
+                return;
+            }
+
+            const element =
+                event.target;
+
+            if (!element) return;
+
+            navigationSound.play();
+        }
+    );
+
+
+    /* =========================================================
+       16. LINKS SEM DESTINO
+       ========================================================= */
+
+    document.querySelectorAll(
+        'a[href="#"]'
+    ).forEach(link => {
+
+        link.addEventListener(
+            "click",
+            event => {
+
+                event.preventDefault();
+
+                const text =
+                    link.textContent.trim();
+
+                if (text) {
+                    announce(
+                        `${text}. Este conteúdo ainda está sendo preparado.`,
+                        true
+                    );
+                }
+            }
+        );
     });
+
+
+    /* =========================================================
+       17. INICIALIZAÇÃO DAS CONFIGURAÇÕES
+       ========================================================= */
+
+    function loadSettings() {
+
+        /* Fonte */
+
+        fontScale =
+            Storage.get(
+                "fontSize",
+                1
+            );
+
+        applyFontScale();
+
+
+        /* Tema */
+
+        const savedTheme =
+            Storage.get(
+                "theme",
+                "default"
+            );
+
+        setTheme(savedTheme);
+
+
+        /* Animações */
+
+        const reducedMotion =
+            Storage.get(
+                "reducedMotion",
+                false
+            );
+
+        setReducedMotion(
+            reducedMotion
+        );
+
+
+        /* Atualiza controles */
+
+        accessibilityVoice.updateButton();
+        navigationSound.updateButton();
+        updateThemeButtons();
+    }
+
+
+    loadSettings();
+
+
+    /* =========================================================
+       18. SUPORTE A PREFERÊNCIA DO SISTEMA
+       ========================================================= */
+
+    const reducedMotionPreference =
+        window.matchMedia(
+            "(prefers-reduced-motion: reduce)"
+        );
+
+
+    function handleMotionPreference(event) {
+
+        const userDefined =
+            Storage.get(
+                "reducedMotion",
+                null
+            );
+
+        if (userDefined !== null) {
+            return;
+        }
+
+        if (event.matches) {
+            html.setAttribute(
+                "data-reduced-motion",
+                "true"
+            );
+        } else {
+            html.removeAttribute(
+                "data-reduced-motion"
+            );
+        }
+    }
+
+
+    handleMotionPreference(
+        reducedMotionPreference
+    );
+
+
+    if (
+        typeof reducedMotionPreference.addEventListener ===
+        "function"
+    ) {
+        reducedMotionPreference.addEventListener(
+            "change",
+            handleMotionPreference
+        );
+    }
+
+
+    /* =========================================================
+       19. LOG DE DESENVOLVIMENTO
+       ========================================================= */
+
+    console.log(
+        "AccessibilityWeb iniciado com sucesso."
+    );
 
 });
