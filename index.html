@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="default">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcessibilyWeb - Guia e Ferramentas de Acessibilidade</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Link para pular para o conteúdo principal (Essencial para leitores de tela e teclado) -->
+    <a href="#conteudo-principal" class="skip-link">Pular para o conteúdo principal</a>
+
+    <!-- Barra de Ferramentas de Acessibilidade -->
+    <aside aria-label="Ferramentas de Acessibilidade" class="accessibility-toolbar">
+        <div class="container toolbar-content">
+            <span class="toolbar-title" id="label-acessibilidade">Painel de Acessibilidade:</span>
+            <div class="toolbar-controls" role="group" aria-labelledby="label-acessibilidade">
+                <button id="btn-aumentar-fonte" class="btn-tool" aria-label="Aumentar tamanho da fonte">A+</button>
+                <button id="btn-diminuir-fonte" class="btn-tool" aria-label="Diminuir tamanho da fonte">A-</button>
+                <button id="btn-alto-contraste" class="btn-tool" aria-pressed="false">Alto Contraste</button>
+                <button id="btn-contraste-ampliado" class="btn-tool" aria-pressed="false">Contraste Ampliado</button>
+                <button id="btn-reduzir-animacao" class="btn-tool" aria-pressed="false">Reduzir Animações</button>
+                <button id="btn-restaurar" class="btn-tool">Restaurar Padrões</button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Cabeçalho Principal -->
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="logo">
+                <span class="logo-text" aria-label="AcessibilyWeb. Página Inicial.">AcessibilyWeb</span>
+            </div>
+            
+            <!-- Menu de Navegação -->
+            <nav class="site-nav" aria-label="Navegação Principal">
+                <button id="menu-toggle" class="menu-toggle" aria-expanded="false" aria-controls="menu-list" aria-label="Abrir menu de navegação">
+                    Menu
+                </button>
+                <ul id="menu-list" class="nav-list">
+                    <li><a href="#inicio" class="nav-link">Início</a></li>
+                    <li><a href="#sobre" class="nav-link">Sobre</a></li>
+                    <li><a href="#recursos" class="nav-link">Recursos</a></li>
+                    <li><a href="#ajuda" class="nav-link">Ajuda</a></li>
+                    <li><a href="#contato" class="nav-link">Contato</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Conteúdo Principal -->
+    <main id="conteudo-principal" tabindex="-1">
+        
+        <!-- Seção Início -->
+        <section id="inicio" class="hero-section">
+            <div class="container">
+                <h1>Tecnologia e Inclusão Sem Barreiras</h1>
+                <p>Um portal desenvolvido inteiramente com padrões rigorosos de acessibilidade para garantir navegação fluida, rápida e sem obstáculos para pessoas cegas ou com baixa visão.</p>
+                <div class="hero-actions">
+                    <a href="#recursos" class="btn btn-primary">Conhecer os recursos de acessibilidade</a>
+                    <a href="#contato" class="btn btn-secondary">Entrar em contato conosco</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Sobre -->
+        <section id="sobre" class="section">
+            <div class="container">
+                <h2>Sobre a Nossa Missão</h2>
+                <p>Acreditamos que a web deve ser um espaço universal. Este site foi estruturado seguindo as diretrizes internacionais <strong>WCAG 2.2 (Nível AA)</strong>, priorizando a semântica correta em HTML e o suporte total a leitores de tela como NVDA, JAWS e VoiceOver.</p>
+            </div>
+        </section>
+
+        <!-- Seção Recursos e Explicação para Pessoas Cegas -->
+        <section id="recursos" class="section bg-alt">
+            <div class="container">
+                <h2>Como Este Site Funciona para Pessoas Cegas</h2>
+                <p class="section-intro">Sabemos que a experiência de navegação por voz e teclado exige previsibilidade e clareza. Veja como estruturamos nosso site:</p>
+                
+                <div class="features-grid">
+                    <article class="feature-card">
+                        <h3>Navegação por Teclado e Foco Visível</h3>
+                        <p>Pressione a tecla <kbd>Tab</kbd> para navegar sequencialmente por todos os elementos interativos. Um indicador visual destacado mostra exatamente onde você está.</p>
+                    </article>
+
+                    <article class="feature-card">
+                        <h3>Estrutura Semântica Clara</h3>
+                        <p>Utilizamos marcos estruturais (<code class="code-inline">&lt;header&gt;</code>, <code class="code-inline">&lt;nav&gt;</code>, <code class="code-inline">&lt;main&gt;</code>, <code class="code-inline">&lt;footer&gt;</code>) e títulos organizados hierarquicamente para permitir saltos rápidos com os comandos do seu leitor de tela.</p>
+                    </article>
+
+                    <article class="feature-card">
+                        <h3>Formulários e Alertas Dinâmicos</h3>
+                        <p>Todos os campos possuem rótulos (<code class="code-inline">&lt;label&gt;</code>) explícitos. Erros de preenchimento são anunciados instantaneamente por regiões dinâmicas com <code class="code-inline">aria-live</code>.</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- Seção Ajuda -->
+        <section id="ajuda" class="section">
+            <div class="container">
+                <h2>Central de Ajuda e Atalhos</h2>
+                <p>Consulte abaixo os principais atalhos recomendados para otimizar sua navegação:</p>
+                <ul class="help-list">
+                    <li><strong>Pular Conteúdo:</strong> Pressione <kbd>Tab</kbd> logo ao abrir a página para ativar o link "Pular para o conteúdo principal".</li>
+                    <li><strong>Navegar entre links e botões:</strong> Utilize a tecla <kbd>Tab</kbd> para avançar e <kbd>Shift + Tab</kbd> para retornar.</li>
+                    <li><strong>Ativar elementos:</strong> Pressione a tecla <kbd>Enter</kbd> ou <kbd>Espaço</kbd> em botões e links.</li>
+                    <li><strong>Fechar menus ou modais:</strong> Pressione a tecla <kbd>Esc</kbd>.</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Seção Contato / Formulário -->
+        <section id="contato" class="section bg-alt">
+            <div class="container">
+                <h2>Fale Conosco</h2>
+                <p>Preencha o formulário abaixo para enviar sua dúvida ou sugestão. Os campos obrigatórios estão sinalizados.</p>
+                
+                <!-- Área de anúncios dinâmicos para leitores de tela -->
+                <div id="form-feedback" class="sr-only" aria-live="polite"></div>
+
+                <form id="contact-form" class="accessibility-form" novalidate>
+                    <div class="form-group">
+                        <label for="nome">Nome completo <span aria-hidden="true">*</span><span class="sr-only">(Campo obrigatório)</span></label>
+                        <input type="text" id="nome" name="nome" required aria-describedby="nome-erro">
+                        <div id="nome-erro" class="error-message" aria-live="polite"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">E-mail <span aria-hidden="true">*</span><span class="sr-only">(Campo obrigatório)</span></label>
+                        <input type="email" id="email" name="email" required aria-describedby="email-erro">
+                        <div id="email-erro" class="error-message" aria-live="polite"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="mensagem">Mensagem <span aria-hidden="true">*</span><span class="sr-only">(Campo obrigatório)</span></label>
+                        <textarea id="mensagem" name="mensagem" rows="5" required aria-describedby="mensagem-erro"></textarea>
+                        <div id="mensagem-erro" class="error-message" aria-live="polite"></div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Enviar formulário</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Rodapé -->
+    <footer class="site-footer">
+        <div class="container footer-content">
+            <p>&copy; 2026 AcessibilyWeb. Todos os direitos reservados.</p>
+            <p>Desenvolvido com foco rigoroso em acessibilidade e conformidade com as diretrizes WCAG 2.2 AA.</p>
+        </div>
+    </footer>
+
+    <!-- Script JavaScript -->
+    <script src="script.js"></script>
+</body>
+</html>
