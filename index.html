@@ -2,249 +2,1605 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AccessibilityWeb - Portal de Tecnologia e Inclusão</title>
-    <meta name="description" content="Portal de notícias e artigos sobre acessibilidade digital, tecnologia inclusiva e recursos adaptativos.">
-    
-    <!-- Open Graph básico -->
-    <meta property="og:title" content="AccessibilityWeb - Portal de Tecnologia e Inclusão">
-    <meta property="og:type" content="website">
-    <meta property="og:description" content="Portal de notícias e artigos sobre acessibilidade digital e tecnologia inclusiva.">
-    
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        AccessibilityWeb | Tecnologia, Inclusão e Acessibilidade Digital
+    </title>
+
+    <meta
+        name="description"
+        content="Informação, ferramentas e recursos para tornar a tecnologia mais acessível e inclusiva."
+    >
+
+    <meta
+        name="theme-color"
+        content="#111827"
+    >
+
+    <!-- Open Graph -->
+    <meta
+        property="og:title"
+        content="AccessibilityWeb | Tecnologia e Inclusão"
+    >
+
+    <meta
+        property="og:type"
+        content="website"
+    >
+
+    <meta
+        property="og:description"
+        content="Tecnologia, acessibilidade e inclusão digital para todos."
+    >
+
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-    <!-- Link de salto para acessibilidade -->
-    <a href="#main-content" class="skip-link">Pular para o conteúdo principal</a>
+    <!-- =====================================================
+         ACESSIBILIDADE
+    ====================================================== -->
 
-    <!-- Área de Status para Leitor de Tela (Invisível) -->
-    <div id="accessibility-status" role="status" aria-live="polite" class="sr-only"></div>
+    <a
+        href="#main-content"
+        class="skip-link"
+    >
+        Pular para o conteúdo principal
+    </a>
 
-    <!-- Barra de Acessibilidade Compacta (Topo) -->
-    <aside aria-label="Ferramentas de Acessibilidade" class="a11y-topbar">
+    <!-- Região utilizada pelo sistema de voz -->
+    <div
+        id="accessibility-status"
+        class="sr-only"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+    ></div>
+
+
+    <!-- =====================================================
+         BARRA DE ACESSIBILIDADE
+    ====================================================== -->
+
+    <aside
+        class="a11y-topbar"
+        aria-label="Ferramentas de acessibilidade"
+    >
+
         <div class="container a11y-topbar-inner">
-            <span class="sr-only" id="label-acessibilidade">Acessibilidade:</span>
-            
-            <div class="a11y-controls" role="group" aria-labelledby="label-acessibilidade">
-                <div class="a11y-group">
-                    <button id="btn-aumentar-fonte" class="a11y-btn" aria-label="A mais">A+</button>
-                    <button id="btn-diminuir-fonte" class="a11y-btn" aria-label="A menos">A-</button>
-                    <button id="btn-alto-contraste" class="a11y-btn" aria-pressed="false" aria-label="Alto Contraste"><span aria-hidden="true">◐</span> Alto Contraste</button>
-                    <button id="btn-contraste-ampliado" class="a11y-btn" aria-pressed="false" aria-label="Contraste Ampliado"><span aria-hidden="true">◑</span> Contraste Ampliado</button>
-                    <button id="btn-reduzir-animacao" class="a11y-btn" aria-pressed="false" aria-label="Reduzir Animações">Reduzir Animações</button>
-                </div>
-                
-                <div class="a11y-group voice-group">
-                    <button id="btn-toggle-voz" class="a11y-btn" aria-pressed="false" aria-label="Ativar Voz">🔊 Voz</button>
-                    <button id="btn-som-navegacao" class="a11y-btn" aria-pressed="false" aria-label="Som de Navegação">🎵 Som</button>
-                    <button id="btn-testar-voz" class="a11y-btn" aria-label="Testar Voz">Testar</button>
-                    <button id="btn-parar-voz" class="a11y-btn" aria-label="Parar Voz">⏹ Parar</button>
+
+            <span
+                id="label-acessibilidade"
+                class="sr-only"
+            >
+                Ferramentas de acessibilidade
+            </span>
+
+            <div
+                class="a11y-controls"
+                role="group"
+                aria-labelledby="label-acessibilidade"
+            >
+
+                <!-- Tamanho e visual -->
+
+                <div
+                    class="a11y-group"
+                    aria-label="Configurações visuais"
+                >
+
+                    <button
+                        type="button"
+                        id="btn-diminuir-fonte"
+                        class="a11y-btn"
+                        aria-label="Diminuir tamanho do texto"
+                    >
+                        <span aria-hidden="true">A−</span>
+                        <span class="btn-text">Texto menor</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-aumentar-fonte"
+                        class="a11y-btn"
+                        aria-label="Aumentar tamanho do texto"
+                    >
+                        <span aria-hidden="true">A+</span>
+                        <span class="btn-text">Texto maior</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-alto-contraste"
+                        class="a11y-btn"
+                        aria-pressed="false"
+                        aria-label="Ativar ou desativar alto contraste"
+                    >
+                        <span aria-hidden="true">◐</span>
+                        <span class="btn-text">Alto contraste</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-contraste-ampliado"
+                        class="a11y-btn"
+                        aria-pressed="false"
+                        aria-label="Ativar ou desativar contraste ampliado"
+                    >
+                        <span aria-hidden="true">◑</span>
+                        <span class="btn-text">Contraste ampliado</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-reduzir-animacao"
+                        class="a11y-btn"
+                        aria-pressed="false"
+                        aria-label="Ativar ou desativar redução de animações"
+                    >
+                        <span aria-hidden="true">◌</span>
+                        <span class="btn-text">Reduzir animações</span>
+                    </button>
+
                 </div>
 
-                <button id="btn-restaurar" class="a11y-btn btn-reset" aria-label="Restaurar Padrões">↺ Restaurar</button>
+
+                <!-- Voz -->
+
+                <div
+                    class="a11y-group voice-group"
+                    aria-label="Recursos de voz e som"
+                >
+
+                    <button
+                        type="button"
+                        id="btn-toggle-voz"
+                        class="a11y-btn"
+                        aria-pressed="false"
+                        aria-label="Ativar voz"
+                    >
+                        <span aria-hidden="true">🔊</span>
+                        <span>Voz</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-som-navegacao"
+                        class="a11y-btn"
+                        aria-pressed="false"
+                        aria-label="Ativar som de navegação"
+                    >
+                        <span aria-hidden="true">♪</span>
+                        <span>Som</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-testar-voz"
+                        class="a11y-btn"
+                        aria-label="Testar sistema de voz"
+                    >
+                        <span aria-hidden="true">▶</span>
+                        <span>Testar voz</span>
+                    </button>
+
+                    <button
+                        type="button"
+                        id="btn-parar-voz"
+                        class="a11y-btn"
+                        aria-label="Parar voz"
+                    >
+                        <span aria-hidden="true">■</span>
+                        <span>Parar</span>
+                    </button>
+
+                </div>
+
+
+                <!-- Restaurar -->
+
+                <button
+                    type="button"
+                    id="btn-restaurar"
+                    class="a11y-btn btn-reset"
+                    aria-label="Restaurar todas as configurações de acessibilidade"
+                >
+                    <span aria-hidden="true">↺</span>
+                    <span>Restaurar</span>
+                </button>
+
             </div>
+
         </div>
+
     </aside>
 
-    <!-- Cabeçalho Principal (Portal) -->
+
+
+    <!-- =====================================================
+         HEADER PRINCIPAL
+    ====================================================== -->
+
     <header class="site-header">
+
         <div class="container header-inner">
-            <a href="#" class="logo-link" aria-label="Página inicial do AccessibilityWeb">
-                <div class="logo">Accessibility<span>Web</span></div>
+
+            <!-- Logo -->
+
+            <a
+                href="#"
+                class="logo-link"
+                aria-label="AccessibilityWeb - Página inicial"
+            >
+
+                <div class="brand">
+
+                    <div class="brand-mark" aria-hidden="true">
+                        AW
+                    </div>
+
+                    <div class="brand-text">
+
+                        <span class="logo">
+                            Accessibility<span>Web</span>
+                        </span>
+
+                        <span class="brand-tagline">
+                            Tecnologia sem barreiras
+                        </span>
+
+                    </div>
+
+                </div>
+
             </a>
 
+
+            <!-- Ações do cabeçalho -->
+
             <div class="header-actions">
-                <form class="search-form" role="search" aria-label="Pesquisa no site">
-                    <label for="search-input" class="sr-only">Pesquisar no site</label>
-                    <input type="search" id="search-input" placeholder="Pesquisar notícias...">
-                    <button type="submit" aria-label="Buscar" class="btn-search">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-                            <circle cx="11" cy="11" r="8"></circle>
-                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                        </svg>
-                    </button>
+
+                <!-- Pesquisa -->
+
+                <form
+                    class="search-form"
+                    role="search"
+                    aria-label="Pesquisar no AccessibilityWeb"
+                >
+
+                    <label
+                        for="search-input"
+                        class="sr-only"
+                    >
+                        Pesquisar no site
+                    </label>
+
+                    <div class="search-wrapper">
+
+                        <span
+                            class="search-icon"
+                            aria-hidden="true"
+                        >
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                aria-hidden="true"
+                            >
+                                <circle
+                                    cx="11"
+                                    cy="11"
+                                    r="8"
+                                ></circle>
+
+                                <line
+                                    x1="21"
+                                    y1="21"
+                                    x2="16.65"
+                                    y2="16.65"
+                                ></line>
+                            </svg>
+                        </span>
+
+                        <input
+                            type="search"
+                            id="search-input"
+                            name="search"
+                            placeholder="Pesquisar..."
+                            autocomplete="off"
+                            aria-label="Pesquisar notícias, artigos e ferramentas"
+                        >
+
+                        <button
+                            type="submit"
+                            class="btn-search"
+                            aria-label="Executar pesquisa"
+                        >
+                            Buscar
+                        </button>
+
+                    </div>
+
                 </form>
 
-                <button id="btn-menu-mobile" class="menu-toggle" aria-expanded="false" aria-controls="main-nav" aria-label="Abrir menu de navegação">
-                    Menu
+
+                <!-- Menu mobile -->
+
+                <button
+                    type="button"
+                    id="btn-menu-mobile"
+                    class="menu-toggle"
+                    aria-expanded="false"
+                    aria-controls="main-nav"
+                    aria-label="Abrir menu de navegação"
+                >
+
+                    <span
+                        class="menu-icon"
+                        aria-hidden="true"
+                    >
+                        ☰
+                    </span>
+
+                    <span>Menu</span>
+
                 </button>
+
             </div>
+
         </div>
 
-        <!-- Navegação Principal -->
-        <nav id="main-nav" class="main-nav" aria-label="Navegação Principal">
+
+
+        <!-- =================================================
+             NAVEGAÇÃO PRINCIPAL
+        ================================================== -->
+
+        <nav
+            id="main-nav"
+            class="main-nav"
+            aria-label="Navegação principal"
+        >
+
             <div class="container">
+
                 <ul class="nav-list">
-                    <li><a href="#" class="nav-link" aria-current="page">Início</a></li>
-                    <li><a href="#" class="nav-link">Sobre</a></li>
-                    <li><a href="#" class="nav-link">Recursos</a></li>
-                    <li><a href="#" class="nav-link">Ajuda</a></li>
-                    <li><a href="#" class="nav-link">Contato</a></li>
+
+                    <li>
+                        <a
+                            href="#inicio"
+                            class="nav-link"
+                            aria-current="page"
+                        >
+                            Início
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#acessibilidade"
+                            class="nav-link"
+                        >
+                            Acessibilidade
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#tecnologia"
+                            class="nav-link"
+                        >
+                            Tecnologia
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#inclusao"
+                            class="nav-link"
+                        >
+                            Inclusão
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#guias"
+                            class="nav-link"
+                        >
+                            Guias
+                        </a>
+                    </li>
+
+                    <li>
+                        <a
+                            href="#sobre"
+                            class="nav-link"
+                        >
+                            Sobre nós
+                        </a>
+                    </li>
+
                 </ul>
+
             </div>
+
         </nav>
 
-        <!-- Navegação de Categorias (Secundária) -->
+
+        <!-- =================================================
+             CATEGORIAS
+        ================================================== -->
+
         <div class="category-bar">
-            <div class="container">
-                <ul class="category-list" aria-label="Navegação por Categorias">
-                    <li><a href="#">Acessibilidade</a></li>
-                    <li><a href="#">Tecnologia</a></li>
-                    <li><a href="#">Inclusão</a></li>
-                    <li><a href="#">Educação</a></li>
-                    <li><a href="#">Guias</a></li>
+
+            <div class="container category-inner">
+
+                <span class="category-label">
+                    Explore:
+                </span>
+
+                <ul
+                    class="category-list"
+                    aria-label="Categorias do site"
+                >
+
+                    <li>
+                        <a href="#leitores-de-tela">
+                            Leitores de tela
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#baixa-visao">
+                            Baixa visão
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#tecnologia-assistiva">
+                            Tecnologia assistiva
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#wcag">
+                            WCAG
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#educacao">
+                            Educação
+                        </a>
+                    </li>
+
                 </ul>
+
             </div>
+
         </div>
+
     </header>
+        <!-- =====================================================
+         CONTEÚDO PRINCIPAL
+    ====================================================== -->
 
-    <!-- Grid do Portal (70% Main / 30% Sidebar) -->
-    <div class="container portal-layout">
-        
-        <!-- Conteúdo Principal -->
-        <main id="main-content" class="main-content">
-            
-            <nav aria-label="Breadcrumb" class="breadcrumb">
+    <main
+        id="main-content"
+        class="site-main"
+    >
+
+        <div class="container">
+
+
+            <!-- =================================================
+                 HERO
+            ================================================== -->
+
+            <section
+                id="inicio"
+                class="hero-section"
+                aria-labelledby="hero-title"
+            >
+
+                <div class="hero-content">
+
+                    <span class="eyebrow">
+                        ACESSIBILIDADE DIGITAL
+                    </span>
+
+                    <h1 id="hero-title">
+                        Tecnologia deve ser
+                        <span>acessível para todos.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        Informação, ferramentas e conhecimento para
+                        construir uma internet mais inclusiva,
+                        independente e sem barreiras.
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a
+                            href="#main-article"
+                            class="btn-primary"
+                        >
+                            Explorar conteúdo
+                        </a>
+
+                        <a
+                            href="#recursos"
+                            class="btn-secondary"
+                        >
+                            Ver recursos
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Destaque visual -->
+
+                <div
+                    class="hero-visual"
+                    aria-hidden="true"
+                >
+
+                    <div class="hero-card">
+
+                        <div class="hero-card-icon">
+                            ♿
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Acessibilidade
+                            </strong>
+
+                            <span>
+                                Informação para todos
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hero-card hero-card-small">
+
+                        <div class="hero-card-icon">
+                            ◉
+                        </div>
+
+                        <div>
+
+                            <strong>
+                                Inclusão digital
+                            </strong>
+
+                            <span>
+                                Tecnologia sem barreiras
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 BREADCRUMB
+            ================================================== -->
+
+            <nav
+                class="breadcrumb"
+                aria-label="Você está aqui"
+            >
+
                 <ol>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="#">Acessibilidade</a></li>
-                    <li><span aria-current="page">Ferramentas de acessibilidade digital</span></li>
+
+                    <li>
+                        <a href="#inicio">
+                            Início
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#acessibilidade">
+                            Acessibilidade
+                        </a>
+                    </li>
+
+                    <li>
+                        <span aria-current="page">
+                            Ferramentas de acessibilidade
+                        </span>
+                    </li>
+
                 </ol>
+
             </nav>
 
-            <article class="editorial-article">
-                <header class="article-header">
-                    <span class="article-category">Acessibilidade</span>
-                    <h1 class="article-title">5 ferramentas de acessibilidade digital para pessoas com deficiência visual</h1>
-                    <p class="article-excerpt">Conheça recursos nativos e aplicativos que podem tornar a navegação digital mais acessível, independente e inclusiva nos dias de hoje.</p>
-                    
-                    <div class="article-meta">
-                        <span class="author">Por <strong>Equipe Editorial</strong></span>
-                        <time datetime="2023-10-25">25 de outubro de 2023</time>
+
+
+            <!-- =================================================
+                 LAYOUT
+            ================================================== -->
+
+            <div class="content-layout">
+
+
+                <!-- =================================================
+                     ARTIGO PRINCIPAL
+                ================================================== -->
+
+                <article
+                    id="main-article"
+                    class="editorial-article"
+                >
+
+                    <header class="article-header">
+
+                        <div class="article-label">
+                            <span class="article-label-dot"></span>
+                            Acessibilidade
+                        </div>
+
+                        <h2 class="article-title">
+                            5 ferramentas de acessibilidade digital
+                            para pessoas com deficiência visual
+                        </h2>
+
+                        <p class="article-excerpt">
+                            Conheça recursos que podem transformar a
+                            maneira como pessoas cegas e com baixa visão
+                            interagem com computadores, celulares e a
+                            internet.
+                        </p>
+
+
+                        <div class="article-meta">
+
+                            <div class="author-info">
+
+                                <div
+                                    class="author-avatar"
+                                    aria-hidden="true"
+                                >
+                                    AW
+                                </div>
+
+                                <div>
+
+                                    <span class="meta-label">
+                                        Publicado por
+                                    </span>
+
+                                    <strong>
+                                        Equipe AccessibilityWeb
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="article-date">
+
+                                <span class="meta-label">
+                                    Publicado em
+                                </span>
+
+                                <time datetime="2026-08-16">
+                                    16 de agosto de 2026
+                                </time>
+
+                            </div>
+
+                        </div>
+
+                    </header>
+
+
+
+                    <!-- =================================================
+                         DESTAQUE DO ARTIGO
+                    ================================================== -->
+
+                    <figure class="article-hero-image">
+
+                        <div
+                            class="article-image-content"
+                            role="img"
+                            aria-label="Ilustração representando tecnologia assistiva e acessibilidade digital"
+                        >
+
+                            <div class="image-decoration image-decoration-one"></div>
+                            <div class="image-decoration image-decoration-two"></div>
+
+                            <div class="accessibility-symbol">
+                                ♿
+                            </div>
+
+                            <div class="image-text">
+
+                                <strong>
+                                    Tecnologia assistiva
+                                </strong>
+
+                                <span>
+                                    Acesso • Autonomia • Inclusão
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <figcaption>
+                            A tecnologia assistiva pode ampliar a autonomia
+                            e facilitar o acesso ao mundo digital.
+                        </figcaption>
+
+                    </figure>
+
+
+
+                    <!-- =================================================
+                         TEXTO DO ARTIGO
+                    ================================================== -->
+
+                    <div class="article-body">
+
+                        <p class="lead">
+                            A tecnologia tem o poder de aproximar pessoas,
+                            ampliar oportunidades e eliminar barreiras.
+                            Para pessoas com deficiência visual, recursos
+                            de acessibilidade podem transformar uma tarefa
+                            que antes parecia impossível em uma experiência
+                            independente.
+                        </p>
+
+
+                        <h3 id="tecnologia-assistiva">
+                            O papel da tecnologia assistiva
+                        </h3>
+
+                        <p>
+                            Computadores, celulares e navegadores modernos
+                            possuem diversos recursos que podem facilitar
+                            o acesso à informação. Além disso, existem
+                            ferramentas especializadas desenvolvidas
+                            especificamente para pessoas cegas ou com
+                            baixa visão.
+                        </p>
+
+                        <p>
+                            Porém, disponibilizar uma ferramenta não é
+                            suficiente. Um site também precisa ser construído
+                            de maneira que leitores de tela, teclados e
+                            outras tecnologias assistivas consigam interpretar
+                            corretamente seu conteúdo.
+                        </p>
+
+
+
+                        <!-- =================================================
+                             BOX DE INFORMAÇÃO
+                        ================================================== -->
+
+                        <aside
+                            class="article-callout"
+                            aria-label="Informação importante"
+                        >
+
+                            <div
+                                class="callout-icon"
+                                aria-hidden="true"
+                            >
+                                !
+                            </div>
+
+                            <div>
+
+                                <strong>
+                                    Acessibilidade não é apenas visual
+                                </strong>
+
+                                <p>
+                                    Um site acessível deve permitir que
+                                    diferentes pessoas naveguem,
+                                    compreendam e interajam com seu conteúdo
+                                    utilizando diferentes tecnologias.
+                                </p>
+
+                            </div>
+
+                        </aside>
+
+
+
+                        <!-- =================================================
+                             FERRAMENTAS
+                        ================================================== -->
+
+                        <h3 id="leitores-de-tela">
+                            1. Leitores de tela
+                        </h3>
+
+                        <p>
+                            Leitores de tela transformam informações
+                            apresentadas visualmente em fala sintetizada
+                            ou em saída para dispositivos Braille.
+                            Eles são fundamentais para muitas pessoas cegas.
+                        </p>
+
+
+                        <div class="tool-grid">
+
+                            <article class="tool-card">
+
+                                <div
+                                    class="tool-icon"
+                                    aria-hidden="true"
+                                >
+                                    🔊
+                                </div>
+
+                                <div class="tool-content">
+
+                                    <span class="tool-category">
+                                        WINDOWS
+                                    </span>
+
+                                    <h4>
+                                        Leitores de tela
+                                    </h4>
+
+                                    <p>
+                                        Recursos que permitem navegar por
+                                        páginas, documentos e aplicativos
+                                        utilizando informações faladas.
+                                    </p>
+
+                                </div>
+
+                            </article>
+
+
+                            <article class="tool-card">
+
+                                <div
+                                    class="tool-icon"
+                                    aria-hidden="true"
+                                >
+                                    ⠿
+                                </div>
+
+                                <div class="tool-content">
+
+                                    <span class="tool-category">
+                                        BRAILLE
+                                    </span>
+
+                                    <h4>
+                                        Linha Braille
+                                    </h4>
+
+                                    <p>
+                                        Dispositivos capazes de apresentar
+                                        textos digitais através de células
+                                        Braille atualizáveis.
+                                    </p>
+
+                                </div>
+
+                            </article>
+
+
+                            <article class="tool-card">
+
+                                <div
+                                    class="tool-icon"
+                                    aria-hidden="true"
+                                >
+                                    ◉
+                                </div>
+
+                                <div class="tool-content">
+
+                                    <span class="tool-category">
+                                        MOBILE
+                                    </span>
+
+                                    <h4>
+                                        Recursos móveis
+                                    </h4>
+
+                                    <p>
+                                        Smartphones modernos oferecem
+                                        recursos integrados para facilitar
+                                        a utilização por pessoas com
+                                        deficiência visual.
+                                    </p>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+
+
+                        <!-- =================================================
+                             SEMÂNTICA
+                        ================================================== -->
+
+                        <h4 id="wcag">
+                            A importância da semântica
+                        </h4>
+
+                        <p>
+                            Para que um leitor de tela consiga interpretar
+                            corretamente uma página, sua estrutura precisa
+                            possuir uma organização lógica. Títulos,
+                            landmarks, formulários, botões e links devem
+                            possuir nomes e funções claras.
+                        </p>
+
+                        <p>
+                            Por isso, desenvolver acessibilidade começa
+                            desde a estrutura HTML e continua passando pelo
+                            CSS, JavaScript e pela experiência completa
+                            de navegação.
+                        </p>
+
+
+
+                        <!-- =================================================
+                             BAIXA VISÃO
+                        ================================================== -->
+
+                        <h3 id="baixa-visao">
+                            2. Ampliadores de tela
+                        </h3>
+
+                        <p>
+                            Pessoas com baixa visão podem utilizar recursos
+                            de ampliação para aumentar textos, imagens e
+                            elementos da interface.
+                        </p>
+
+                        <p>
+                            Além da ampliação, contraste, espaçamento,
+                            tamanho da fonte e organização visual possuem
+                            grande importância para tornar uma interface
+                            confortável e compreensível.
+                        </p>
+
+
+
+                        <!-- =================================================
+                             CONCLUSÃO
+                        ================================================== -->
+
+                        <h3>
+                            Acessibilidade começa no desenvolvimento
+                        </h3>
+
+                        <p>
+                            Criar uma experiência acessível não significa
+                            adicionar apenas um botão de alto contraste.
+                            É necessário pensar em toda a jornada do usuário,
+                            desde o primeiro contato com a página até a
+                            utilização de cada funcionalidade.
+                        </p>
+
+                        <p>
+                            Quando acessibilidade é considerada desde o
+                            início do projeto, a tecnologia pode se tornar
+                            uma ferramenta de autonomia, participação e
+                            inclusão.
+                        </p>
+
                     </div>
-                </header>
 
-                <figure class="article-figure">
-                    <!-- Placeholder visual substituindo a imagem -->
-                    <div class="image-placeholder" aria-hidden="true"></div>
-                    <!-- Imagem real deve possuir o atributo alt correto -->
-                    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" alt="Pessoa utilizando um teclado em braille conectado a um smartphone" class="main-image">
-                    <figcaption>Equipamentos adaptados transformam a interação com o mundo digital.</figcaption>
-                </figure>
 
-                <div class="article-body">
-                    <h2>O papel da tecnologia assistiva</h2>
-                    <p>A tecnologia tem o poder de quebrar barreiras. Para pessoas com deficiência visual, a acessibilidade digital não é apenas um conforto, mas uma necessidade fundamental para garantir a independência na web.</p>
-                    <p>Hoje, os sistemas operacionais e navegadores modernos já trazem uma série de ferramentas embutidas. No entanto, entender como utilizá-las ou quais softwares de terceiros podem complementar essa experiência é crucial.</p>
+                    <!-- =================================================
+                         TAGS
+                    ================================================== -->
 
-                    <h2>1. Leitores de Tela (Screen Readers)</h2>
-                    <p>Os leitores de tela são a espinha dorsal da navegação para pessoas cegas. Softwares como o NVDA (gratuito) e o JAWS (pago) para Windows, ou o VoiceOver nativo do ecossistema Apple, transformam elementos visuais da interface em fala sintetizada ou saída em braille.</p>
-                    
-                    <h3>A importância da semântica</h3>
-                    <p>Para que o leitor de tela funcione corretamente, o site deve ser construído com HTML semântico, utilizando atributos ARIA adequadamente, exatamente como fizemos na estruturação deste portal.</p>
+                    <footer class="article-footer">
 
-                    <h2>2. Ampliadores de Tela</h2>
-                    <p>Para pessoas com baixa visão, os ampliadores de tela são indispensáveis. A Lupa do Windows e o Zoom do macOS permitem aumentar não apenas o tamanho da fonte, mas toda a interface gráfica em proporções que variam de 200% a 1000%.</p>
-                </div>
-            </article>
-        </main>
+                        <span class="tags-label">
+                            Neste artigo:
+                        </span>
 
-        <!-- Sidebar -->
-        <aside class="sidebar" aria-label="Barra Lateral">
-            
-            <!-- Widget de Newsletter -->
-            <div class="widget newsletter-widget">
-                <h2 class="widget-title">Assine nossa Newsletter</h2>
-                <p>Receba conteúdos sobre acessibilidade, tecnologia e inclusão diretamente no seu e-mail.</p>
-                
-                <form class="newsletter-form" aria-label="Formulário de inscrição na newsletter">
-                    <div class="form-group">
-                        <label for="news-nome">Nome completo</label>
-                        <input type="text" id="news-nome" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="news-email">E-mail</label>
-                        <input type="email" id="news-email" required>
-                    </div>
-                    <button type="submit" class="btn-primary">Inscrever-se</button>
-                </form>
+                        <div class="article-tags">
+
+                            <a href="#acessibilidade">
+                                Acessibilidade
+                            </a>
+
+                            <a href="#tecnologia-assistiva">
+                                Tecnologia assistiva
+                            </a>
+
+                            <a href="#leitores-de-tela">
+                                Leitores de tela
+                            </a>
+
+                            <a href="#wcag">
+                                WCAG
+                            </a>
+
+                        </div>
+
+                    </footer>
+
+                </article>
+
+
+
+                <!-- =================================================
+                     SIDEBAR
+                ================================================== -->
+
+                <aside
+                    class="sidebar"
+                    aria-label="Conteúdo complementar"
+                >
+
+
+                    <!-- Newsletter -->
+
+                    <section
+                        class="sidebar-card newsletter-card"
+                        aria-labelledby="newsletter-title"
+                    >
+
+                        <div class="sidebar-icon" aria-hidden="true">
+                            ✉
+                        </div>
+
+                        <span class="sidebar-eyebrow">
+                            FIQUE POR DENTRO
+                        </span>
+
+                        <h2 id="newsletter-title">
+                            Informação que
+                            chega até você.
+                        </h2>
+
+                        <p>
+                            Receba conteúdos sobre tecnologia,
+                            acessibilidade e inclusão diretamente
+                            no seu e-mail.
+                        </p>
+
+
+                        <form
+                            class="newsletter-form"
+                            aria-label="Inscrição na newsletter"
+                        >
+
+                            <div class="form-group">
+
+                                <label for="news-nome">
+                                    Nome completo
+                                </label>
+
+                                <input
+                                    type="text"
+                                    id="news-nome"
+                                    name="name"
+                                    autocomplete="name"
+                                    placeholder="Digite seu nome"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="news-email">
+                                    E-mail
+                                </label>
+
+                                <input
+                                    type="email"
+                                    id="news-email"
+                                    name="email"
+                                    autocomplete="email"
+                                    placeholder="voce@email.com"
+                                    required
+                                >
+
+                            </div>
+
+
+                            <button
+                                type="submit"
+                                class="btn-primary newsletter-submit"
+                            >
+                                Quero receber
+                            </button>
+
+                        </form>
+
+                    </section>
+
+
+
+                    <!-- Recursos -->
+
+                    <section
+                        id="recursos"
+                        class="sidebar-card resources-card"
+                        aria-labelledby="resources-title"
+                    >
+
+                        <div class="card-heading">
+
+                            <span class="sidebar-eyebrow">
+                                RECURSOS
+                            </span>
+
+                            <h2 id="resources-title">
+                                Explore mais
+                            </h2>
+
+                        </div>
+
+
+                        <ul class="resource-list">
+
+                            <li>
+
+                                <a href="#leitores-de-tela">
+
+                                    <span
+                                        class="resource-icon"
+                                        aria-hidden="true"
+                                    >
+                                        🔊
+                                    </span>
+
+                                    <span>
+                                        <strong>
+                                            Leitores de tela
+                                        </strong>
+
+                                        <small>
+                                            Conheça os principais recursos
+                                        </small>
+                                    </span>
+
+                                    <span
+                                        aria-hidden="true"
+                                        class="resource-arrow"
+                                    >
+                                        →
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+                            <li>
+
+                                <a href="#baixa-visao">
+
+                                    <span
+                                        class="resource-icon"
+                                        aria-hidden="true"
+                                    >
+                                        ◉
+                                    </span>
+
+                                    <span>
+                                        <strong>
+                                            Baixa visão
+                                        </strong>
+
+                                        <small>
+                                            Ferramentas de ampliação
+                                        </small>
+                                    </span>
+
+                                    <span
+                                        aria-hidden="true"
+                                        class="resource-arrow"
+                                    >
+                                        →
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+
+                            <li>
+
+                                <a href="#wcag">
+
+                                    <span
+                                        class="resource-icon"
+                                        aria-hidden="true"
+                                    >
+                                        ✓
+                                    </span>
+
+                                    <span>
+                                        <strong>
+                                            WCAG
+                                        </strong>
+
+                                        <small>
+                                            Princípios de acessibilidade
+                                        </small>
+                                    </span>
+
+                                    <span
+                                        aria-hidden="true"
+                                        class="resource-arrow"
+                                    >
+                                        →
+                                    </span>
+
+                                </a>
+
+                            </li>
+
+                        </ul>
+
+                    </section>
+
+
+
+                    <!-- Artigos relacionados -->
+
+                    <section
+                        class="sidebar-card related-card"
+                        aria-labelledby="related-title"
+                    >
+
+                        <div class="card-heading">
+
+                            <span class="sidebar-eyebrow">
+                                CONTINUE LENDO
+                            </span>
+
+                            <h2 id="related-title">
+                                Conteúdos relacionados
+                            </h2>
+
+                        </div>
+
+
+                        <div class="card-list">
+
+
+                            <article class="mini-card">
+
+                                <div
+                                    class="mini-card-image"
+                                    aria-hidden="true"
+                                >
+                                    01
+                                </div>
+
+                                <div class="card-content">
+
+                                    <span class="card-cat">
+                                        TECNOLOGIA
+                                    </span>
+
+                                    <h3 class="card-title">
+
+                                        <a href="#">
+                                            Como testar a
+                                            acessibilidade do seu site
+                                        </a>
+
+                                    </h3>
+
+                                </div>
+
+                            </article>
+
+
+
+                            <article class="mini-card">
+
+                                <div
+                                    class="mini-card-image"
+                                    aria-hidden="true"
+                                >
+                                    02
+                                </div>
+
+                                <div class="card-content">
+
+                                    <span class="card-cat">
+                                        INCLUSÃO
+                                    </span>
+
+                                    <h3 class="card-title">
+
+                                        <a href="#">
+                                            O impacto das cores no
+                                            design inclusivo
+                                        </a>
+
+                                    </h3>
+
+                                </div>
+
+                            </article>
+
+
+
+                            <article class="mini-card">
+
+                                <div
+                                    class="mini-card-image"
+                                    aria-hidden="true"
+                                >
+                                    03
+                                </div>
+
+                                <div class="card-content">
+
+                                    <span class="card-cat">
+                                        EDUCAÇÃO
+                                    </span>
+
+                                    <h3 class="card-title">
+
+                                        <a href="#">
+                                            Padrões WCAG explicados
+                                            de forma simples
+                                        </a>
+
+                                    </h3>
+
+                                </div>
+
+                            </article>
+
+                        </div>
+
+                    </section>
+
+                </aside>
+
             </div>
 
-            <!-- Widget Relacionados -->
-            <div class="widget related-widget">
-                <h2 class="widget-title">Conteúdos Relacionados</h2>
-                
-                <div class="card-list">
-                    <!-- Card 1 -->
-                    <article class="mini-card">
-                        <div class="card-img-placeholder" aria-hidden="true"></div>
-                        <div class="card-content">
-                            <span class="card-cat">Tecnologia</span>
-                            <h3 class="card-title">
-                                <a href="#" aria-label="Leia o artigo sobre Como testar a acessibilidade do seu site">Como testar a acessibilidade do seu site</a>
-                            </h3>
-                        </div>
-                    </article>
+        </div>
 
-                    <!-- Card 2 -->
-                    <article class="mini-card">
-                        <div class="card-img-placeholder" aria-hidden="true"></div>
-                        <div class="card-content">
-                            <span class="card-cat">Inclusão</span>
-                            <h3 class="card-title">
-                                <a href="#" aria-label="Leia o artigo sobre O impacto das cores no design inclusivo">O impacto das cores no design inclusivo</a>
-                            </h3>
-                        </div>
-                    </article>
+    </main>
+        <!-- =====================================================
+         FOOTER
+    ====================================================== -->
 
-                    <!-- Card 3 -->
-                    <article class="mini-card">
-                        <div class="card-img-placeholder" aria-hidden="true"></div>
-                        <div class="card-content">
-                            <span class="card-cat">Educação</span>
-                            <h3 class="card-title">
-                                <a href="#" aria-label="Leia o artigo sobre Padrões WCAG 2.2 explicados">Padrões WCAG 2.2 explicados</a>
-                            </h3>
-                        </div>
-                    </article>
-                </div>
-            </div>
+    <footer
+        id="sobre"
+        class="site-footer"
+    >
 
-        </aside>
-    </div>
-
-    <!-- Footer Profissional -->
-    <footer class="site-footer">
         <div class="container footer-grid">
+
+
+            <!-- Marca -->
+
             <div class="footer-brand">
-                <div class="logo">Accessibility<span>Web</span></div>
-                <p>Tecnologia e inclusão sem barreiras.</p>
+
+                <a
+                    href="#inicio"
+                    class="footer-logo"
+                    aria-label="Voltar para o início"
+                >
+
+                    <span class="footer-logo-mark">
+                        AW
+                    </span>
+
+                    <span>
+                        Accessibility<span>Web</span>
+                    </span>
+
+                </a>
+
+                <p>
+                    Tecnologia, acessibilidade e inclusão
+                    para construir uma internet sem barreiras.
+                </p>
+
+
+                <div class="footer-badge">
+
+                    <span aria-hidden="true">
+                        ✓
+                    </span>
+
+                    <span>
+                        Desenvolvido com acessibilidade
+                        em mente
+                    </span>
+
+                </div>
+
             </div>
-            
-            <nav class="footer-nav" aria-label="Navegação de Rodapé">
-                <h3>Navegação</h3>
+
+
+
+            <!-- Navegação -->
+
+            <nav
+                class="footer-nav"
+                aria-label="Navegação do rodapé"
+            >
+
+                <h2>
+                    Navegação
+                </h2>
+
                 <ul>
-                    <li><a href="#">Início</a></li>
-                    <li><a href="#">Sobre nós</a></li>
-                    <li><a href="#">Recursos</a></li>
-                    <li><a href="#">Ajuda</a></li>
-                    <li><a href="#">Contato</a></li>
+
+                    <li>
+                        <a href="#inicio">
+                            Início
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#acessibilidade">
+                            Acessibilidade
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#tecnologia-assistiva">
+                            Tecnologia assistiva
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#recursos">
+                            Recursos
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#sobre">
+                            Sobre nós
+                        </a>
+                    </li>
+
                 </ul>
+
             </nav>
+
+
+
+            <!-- Categorias -->
+
+            <nav
+                class="footer-nav"
+                aria-label="Categorias"
+            >
+
+                <h2>
+                    Categorias
+                </h2>
+
+                <ul>
+
+                    <li>
+                        <a href="#leitores-de-tela">
+                            Leitores de tela
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#baixa-visao">
+                            Baixa visão
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#wcag">
+                            WCAG
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="#educacao">
+                            Educação
+                        </a>
+                    </li>
+
+                </ul>
+
+            </nav>
+
+
+
+            <!-- Compromisso -->
 
             <div class="footer-a11y">
-                <h3>Compromisso</h3>
-                <p>Este site foi desenvolvido seguindo as diretrizes WCAG 2.2 AA para garantir a melhor experiência para todas as pessoas.</p>
+
+                <h2>
+                    Nosso compromisso
+                </h2>
+
+                <p>
+                    A acessibilidade deve fazer parte da
+                    experiência digital desde o início do projeto.
+                </p>
+
+                <a
+                    href="#main-content"
+                    class="footer-back-top"
+                >
+                    Voltar ao topo
+                    <span aria-hidden="true">↑</span>
+                </a>
+
             </div>
+
         </div>
+
+
+
+        <!-- Rodapé inferior -->
+
         <div class="footer-bottom">
-            <div class="container">
-                <p>&copy; 2023 AccessibilityWeb. Todos os direitos reservados.</p>
+
+            <div class="container footer-bottom-inner">
+
+                <p>
+                    © 2026 AccessibilityWeb.
+                    Todos os direitos reservados.
+                </p>
+
+                <p>
+                    Tecnologia e inclusão sem barreiras.
+                </p>
+
             </div>
+
         </div>
+
     </footer>
 
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ====================================================== -->
+
     <script src="script.js"></script>
+
 </body>
 </html>
