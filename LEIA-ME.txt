@@ -1,0 +1,35 @@
+ECHO//NULL — JOGO 2D ACESSÍVEL
+
+Esta versão transforma o jogo em uma experiência 2D top-down.
+
+O jogador que enxerga pode visualizar:
+- mapa;
+- personagem azul;
+- saída verde;
+- criatura vermelha;
+- direção;
+- efeito visual do eco.
+
+O jogador cego pode jogar pela:
+- narração;
+- teclado;
+- ecolocalização;
+- sons;
+- descrição do estado;
+- foco e leitura por TAB.
+
+CONTROLES:
+W / SETA PARA CIMA = norte
+S / SETA PARA BAIXO = sul
+A / SETA PARA ESQUERDA = oeste
+D / SETA PARA DIREITA = leste
+E = eco
+F = interagir
+H = ajuda
+ESC = menu
+TAB = ler elemento seguinte
+
+OBJETIVO:
+Encontrar a saída verde no mapa sem deixar a criatura chegar até você.
+
+Abra index.html no Google Chrome ou Microsoft Edge.
