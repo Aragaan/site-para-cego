@@ -526,3 +526,341 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicia o aplicativo globalmente para permitir cruzamento seguro de métodos
     window.app = new App();
 });
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ==========================================
+    // 1. GERENCIADOR DE STORAGE
+    // ==========================================
+    class StorageManager {
+        static get(key, defaultValue) {
+            try {
+                const value = localStorage.getItem(`a11y_${key}`);
+                return value !== null ? JSON.parse(value) : defaultValue;
+            } catch (e) { return defaultValue; }
+        }
+        static set(key, value) {
+            try { localStorage.setItem(`a11y_${key}`, JSON.stringify(value)); } catch (e) {}
+        }
+        static clear() {
+            try {
+                Object.keys(localStorage).forEach(key => {
+                    if (key.startsWith('a11y_')) localStorage.removeItem(key);
+                });
+            } catch (e) {}
+        }
+    }
+
+    // ==========================================
+    // 2. SISTEMA CENTRAL DE VOZ (Web Speech API)
+    // ==========================================
+    class SpeechSystem {
+        constructor() {
+            this.synth = window.speechSynthesis;
+            this.voiceEnabled = StorageManager.get('voiceEnabled', false);
+            this.speechRate = StorageManager.get('speechRate', 1.0);
+            this.speechVolume = StorageManager.get('speechVolume', 1.0);
+            this.preferredVoice = null;
+            this.statusRegion = document.getElementById('accessibility-status');
+            
+            // Corrige o carregamento assíncrono das vozes (Regra 17)
+            this.loadVoices();
+            if (this.synth.onvoiceschanged !== undefined) {
+                this.synth.onvoiceschanged = () => this.loadVoices();
+            }
+
+            this.updateVoiceButtonUI();
+        }
+
+        loadVoices() {
+            const voices = this.synth.getVoices();
+            if (voices.length > 0) {
+                // Prioridade: pt-BR > pt-PT > Padrão do sistema
+                this.preferredVoice = voices.find(v => v.lang === 'pt-BR' || v.lang === 'pt_BR') || 
+                                      voices.find(v => v.lang === 'pt-PT') || 
+                                      voices[0];
+            }
+        }
+
+        // Função Central de Voz (Regras 14 e 15)
+        speak(message, force = false) {
+            // Atualiza área ARIA imediatamente para leitores de tela nativos (Regra 21)
+            if (this.statusRegion && message) {
+                this.statusRegion.textContent = ''; 
+                setTimeout(() => { this.statusRegion.textContent = message; }, 50);
+            }
+
+            if (!this.voiceEnabled && !force) return;
+
+            // Cancela fala anterior para não sobrepor (Regra 14)
+            this.synth.cancel();
+
+            if (!message) return;
+
+            const utterance = new SpeechSynthesisUtterance(message);
+            utterance.lang = 'pt-BR';
+            utterance.rate = this.speechRate;
+            utterance.volume = this.speechVolume;
+            
+            if (this.preferredVoice) {
+                utterance.voice = this.preferredVoice;
+            }
+
+            this.synth.speak(utterance);
+        }
+
+        stop() {
+            this.synth.cancel();
+        }
+
+        toggleVoice() {
+            this.voiceEnabled = !this.voiceEnabled;
+            StorageManager.set('voiceEnabled', this.voiceEnabled);
+            this.updateVoiceButtonUI();
+
+            if (this.voiceEnabled) {
+                this.speak("Voz ativada.", true);
+            } else {
+                this.speak("Voz desativada.", true);
+                setTimeout(() => this.stop(), 1500); // Dá tempo de falar que desativou e corta
+            }
+        }
+
+        updateVoiceButtonUI() {
+            const btn = document.getElementById('btn-toggle-voz');
+            if (btn) {
+                btn.setAttribute('aria-pressed', this.voiceEnabled);
+                btn.textContent = this.voiceEnabled ? "Desativar Voz" : "Ativar Voz";
+                btn.setAttribute('aria-label', this.voiceEnabled ? "Desativar Voz" : "Ativar Voz");
+            }
+        }
+    }
+
+    // ==========================================
+    // 3. GERENCIADOR DE SOM DE NAVEGAÇÃO
+    // ==========================================
+    class SoundSystem {
+        constructor() {
+            this.soundEnabled = StorageManager.get('soundEnabled', false);
+            this.audioCtx = null;
+            this.updateSoundButtonUI();
+        }
+
+        playBeep() {
+            if (!this.soundEnabled) return;
+            try {
+                if (!this.audioCtx) {
+                    const AudioContext = window.AudioContext || window.webkitAudioContext;
+                    this.audioCtx = new AudioContext();
+                }
+                if (this.audioCtx.state === 'suspended') this.audioCtx.resume();
+
+                const osc = this.audioCtx.createOscillator();
+                const gain = this.audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, this.audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.05, this.audioCtx.currentTime); // Volume baixo
+
+                osc.connect(gain);
+                gain.connect(this.audioCtx.destination);
+                osc.start();
+                osc.stop(this.audioCtx.currentTime + 0.05); // Som muito curto
+            } catch (e) {}
+        }
+
+        toggleSound() {
+            this.soundEnabled = !this.soundEnabled;
+            StorageManager.set('soundEnabled', this.soundEnabled);
+            this.updateSoundButtonUI();
+            return this.soundEnabled;
+        }
+
+        updateSoundButtonUI() {
+            const btn = document.getElementById('btn-som-navegacao');
+            if (btn) btn.setAttribute('aria-pressed', this.soundEnabled);
+        }
+    }
+
+    // Instancia os sistemas globais
+    const speech = new SpeechSystem();
+    const sound = new SoundSystem();
+
+    // ==========================================
+    // 4. IDENTIFICAÇÃO E FOCO DE TECLADO (Regras 12, 13 e 23)
+    // ==========================================
+    let lastKeyAction = null;
+
+    // Rastreia se a navegação foi com Tab ou Shift+Tab
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Tab') {
+            lastKeyAction = e.shiftKey ? 'shift-tab' : 'tab';
+        } else if (e.key === 'Enter' || e.key === ' ') {
+            lastKeyAction = 'activate';
+        }
+    });
+
+    document.addEventListener('mousedown', () => {
+        lastKeyAction = 'mouse'; // Desativa prefixo de voz para mouse
+    });
+
+    // Função que descobre exatamente o que o elemento é (Regra 24)
+    function getAccessibleDescription(el) {
+        let name = el.getAttribute('aria-label') || el.innerText || el.value || el.title || '';
+        name = name.trim();
+        if (!name) return '';
+
+        let role = 'Elemento';
+        if (el.tagName === 'BUTTON' || el.getAttribute('role') === 'button') role = 'Botão';
+        else if (el.tagName === 'A') role = 'Link';
+        else if (el.tagName === 'INPUT') {
+            if (el.type === 'checkbox') role = 'Caixa de seleção';
+            else if (el.type === 'radio') role = 'Botão de opção';
+            else role = 'Campo de texto';
+        }
+
+        let state = '';
+        if (el.hasAttribute('aria-pressed')) {
+            state = el.getAttribute('aria-pressed') === 'true' ? 'ativado' : 'desativado';
+        } else if (el.type === 'checkbox' || el.type === 'radio') {
+            state = el.checked ? 'marcada' : 'desmarcada';
+        }
+
+        // Formato final: "Nome. Role. Estado."
+        return `${name}. ${role}.${state ? ' ' + state + '.' : ''}`;
+    }
+
+    // Captura o foco sem quebrar o comportamento padrão
+    document.addEventListener('focusin', (e) => {
+        if (lastKeyAction === 'tab' || lastKeyAction === 'shift-tab') {
+            const desc = getAccessibleDescription(e.target);
+            if (desc) {
+                const prefix = lastKeyAction === 'tab' ? 'Tab. ' : 'Voltando. ';
+                speech.speak(prefix + desc);
+                sound.playBeep();
+            }
+        }
+    });
+
+    // ==========================================
+    // 5. AÇÕES DOS BOTÕES (Regras 1 a 10 e 19)
+    // ==========================================
+    const rootHtml = document.documentElement;
+    let currentFontSize = StorageManager.get('fontSize', 1);
+    rootHtml.style.setProperty('--font-scale', `${currentFontSize}rem`);
+
+    // A+
+    document.getElementById('btn-aumentar-fonte')?.addEventListener('click', () => {
+        if (currentFontSize < 1.8) currentFontSize += 0.1;
+        rootHtml.style.setProperty('--font-scale', `${currentFontSize}rem`);
+        StorageManager.set('fontSize', currentFontSize);
+        speech.speak("A mais. Tamanho da fonte aumentado.");
+    });
+
+    // A-
+    document.getElementById('btn-diminuir-fonte')?.addEventListener('click', () => {
+        if (currentFontSize > 0.8) currentFontSize -= 0.1;
+        rootHtml.style.setProperty('--font-scale', `${currentFontSize}rem`);
+        StorageManager.set('fontSize', currentFontSize);
+        speech.speak("A menos. Tamanho da fonte diminuído.");
+    });
+
+    // Alto Contraste
+    document.getElementById('btn-alto-contraste')?.addEventListener('click', (e) => {
+        const btn = e.target;
+        const isTargetState = rootHtml.getAttribute('data-theme') !== 'high-contrast';
+        
+        rootHtml.setAttribute('data-theme', isTargetState ? 'high-contrast' : 'default');
+        btn.setAttribute('aria-pressed', isTargetState);
+        document.getElementById('btn-contraste-ampliado')?.setAttribute('aria-pressed', 'false'); // Reseta o outro
+        
+        StorageManager.set('theme', isTargetState ? 'high-contrast' : 'default');
+        speech.speak(isTargetState ? "Alto contraste ativado." : "Alto contraste desativado.");
+    });
+
+    // Contraste Ampliado
+    document.getElementById('btn-contraste-ampliado')?.addEventListener('click', (e) => {
+        const btn = e.target;
+        const isTargetState = rootHtml.getAttribute('data-theme') !== 'amplified-contrast';
+        
+        rootHtml.setAttribute('data-theme', isTargetState ? 'amplified-contrast' : 'default');
+        btn.setAttribute('aria-pressed', isTargetState);
+        document.getElementById('btn-alto-contraste')?.setAttribute('aria-pressed', 'false'); // Reseta o outro
+        
+        StorageManager.set('theme', isTargetState ? 'amplified-contrast' : 'default');
+        speech.speak(isTargetState ? "Contraste ampliado ativado." : "Contraste ampliado desativado.");
+    });
+
+    // Reduzir Animações
+    document.getElementById('btn-reduzir-animacao')?.addEventListener('click', (e) => {
+        const btn = e.target;
+        const isTargetState = rootHtml.getAttribute('data-reduced-motion') !== 'true';
+        
+        rootHtml.setAttribute('data-reduced-motion', isTargetState);
+        btn.setAttribute('aria-pressed', isTargetState);
+        StorageManager.set('reducedMotion', isTargetState);
+        
+        speech.speak(isTargetState ? "Redução de animações ativada." : "Redução de animações desativada.");
+    });
+
+    // Toggle Voz
+    document.getElementById('btn-toggle-voz')?.addEventListener('click', () => {
+        speech.toggleVoice();
+    });
+
+    // Testar Voz
+    document.getElementById('btn-testar-voz')?.addEventListener('click', () => {
+        // Usa o 'true' para forçar a fala mesmo se a voz estiver desligada (útil para testar)
+        speech.speak("Teste de voz realizado com sucesso. O sistema de acessibilidade está funcionando.", true);
+    });
+
+    // Parar Voz
+    document.getElementById('btn-parar-voz')?.addEventListener('click', () => {
+        speech.stop();
+    });
+
+    // Som de Navegação
+    document.getElementById('btn-som-navegacao')?.addEventListener('click', () => {
+        const isEnabled = sound.toggleSound();
+        speech.speak(isEnabled ? "Som de navegação ativado." : "Som de navegação desativado.");
+    });
+
+    // Restaurar Padrões (Regra 27)
+    document.getElementById('btn-restaurar')?.addEventListener('click', () => {
+        StorageManager.clear(); // Limpa tudo
+        
+        // Restaura estados visuais
+        rootHtml.style.setProperty('--font-scale', '1rem');
+        rootHtml.setAttribute('data-theme', 'default');
+        rootHtml.removeAttribute('data-reduced-motion');
+        currentFontSize = 1;
+
+        // Restaura atributos dos botões
+        document.querySelectorAll('.btn-tool[aria-pressed]').forEach(b => b.setAttribute('aria-pressed', 'false'));
+        
+        // Mantém as classes instanciadas atualizadas
+        speech.voiceEnabled = false;
+        speech.updateVoiceButtonUI();
+        sound.soundEnabled = false;
+        sound.updateSoundButtonUI();
+
+        // Fala a mensagem forçada (pois a voz acabou de ser desligada no reset)
+        speech.speak("Todas as configurações foram restauradas para o padrão.", true);
+    });
+
+    // Aplica configurações iniciais no carregamento sem falar
+    const savedTheme = StorageManager.get('theme', 'default');
+    if (savedTheme !== 'default') {
+        rootHtml.setAttribute('data-theme', savedTheme);
+        const btnId = savedTheme === 'high-contrast' ? 'btn-alto-contraste' : 'btn-contraste-ampliado';
+        document.getElementById(btnId)?.setAttribute('aria-pressed', 'true');
+    }
+
+    if (StorageManager.get('reducedMotion', false)) {
+        rootHtml.setAttribute('data-reduced-motion', 'true');
+        document.getElementById('btn-reduzir-animacao')?.setAttribute('aria-pressed', 'true');
+    }
+});
+
+
+
+
+
