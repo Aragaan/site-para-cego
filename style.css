@@ -107,7 +107,7 @@ body {
 }
 
 /* Foco global altamente visível (Exigência WCAG) */
-a:focus, button:focus, input:focus, textarea:focus, select:focus {
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible {
     outline: 3px solid var(--focus-ring) !important;
     outline-offset: 3px !important;
 }
@@ -144,10 +144,22 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus {
 .toolbar-controls {
     display: flex;
     flex-wrap: wrap;
+    align-items: center;
     gap: 8px;
 }
 
-.btn-tool {
+/* Grupo de Controles de Voz adicionado no novo HTML */
+.voice-controls-group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    border-left: 2px solid var(--border-color);
+    padding-left: 10px;
+    margin-left: 5px;
+}
+
+.btn-tool, .dropdown-tool {
     background-color: var(--bg-color);
     color: var(--text-color);
     border: 2px solid var(--border-color);
@@ -159,10 +171,22 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus {
     transition: background-color var(--transition-speed);
 }
 
-.btn-tool:hover {
+.dropdown-tool {
+    padding: 5px 12px;
+    font-family: inherit;
+}
+
+.btn-tool:hover, .dropdown-tool:hover {
     background-color: var(--primary-color);
     color: var(--bg-color);
     border-color: var(--primary-color);
+}
+
+/* Feedback de botões de ferramenta ativos */
+.btn-tool[aria-pressed="true"] {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+    border-color: var(--text-color);
 }
 
 /* ==========================================
@@ -172,6 +196,7 @@ a:focus, button:focus, input:focus, textarea:focus, select:focus {
     background-color: var(--bg-color);
     border-bottom: 2px solid var(--border-color);
     padding: 20px 0;
+    position: relative; /* Necessário para o menu mobile absolute funcionar corretamente */
 }
 
 .header-container {
@@ -337,7 +362,8 @@ kbd {
 }
 
 .form-group input,
-.form-group textarea {
+.form-group textarea,
+.form-group select {
     padding: 12px;
     font-size: 1rem;
     border: 2px solid var(--border-color);
@@ -346,8 +372,10 @@ kbd {
     color: var(--text-color);
 }
 
-.form-group input.error,
-.form-group textarea.error {
+/* Alterado de .error para suportar o ARIA state do Javascript */
+.form-group input[aria-invalid="true"],
+.form-group textarea[aria-invalid="true"],
+.form-group select[aria-invalid="true"] {
     border-color: var(--error-color);
     background-color: var(--error-bg);
 }
@@ -425,10 +453,18 @@ kbd {
         border-bottom: 2px solid var(--border-color);
         padding: 20px;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        z-index: 100;
     }
 
     .nav-list.active {
         display: flex;
+    }
+
+    .voice-controls-group {
+        border-left: none;
+        padding-left: 0;
+        margin-left: 0;
+        width: 100%;
     }
 
     .hero-section h1 {
