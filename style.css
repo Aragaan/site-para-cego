@@ -1,1 +1,1102 @@
+```css
+/* ============================================================
+   ECHO//NULL
+   STYLE SYSTEM v0.1
+
+   Filosofia:
+   - Preto como estado visual padrão
+   - Interface mínima
+   - Alto contraste
+   - Foco de teclado sempre perceptível
+   - Sem animações obrigatórias
+   - Respeito a prefers-reduced-motion
+   ============================================================ */
+
+
+/* ============================================================
+   1. RESET
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+html {
+    width: 100%;
+    height: 100%;
+
+    background: #000;
+
+    color-scheme: dark;
+
+    font-size: 16px;
+
+    scroll-behavior: smooth;
+}
+
+
+body {
+    width: 100%;
+    min-height: 100vh;
+
+    background: #000;
+
+    color: #fff;
+
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+
+    line-height: 1.5;
+
+    overflow: hidden;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+
+/* ============================================================
+   2. VARIÁVEIS
+   ============================================================ */
+
+:root {
+
+    /* Cores principais */
+
+    --color-black: #000000;
+
+    --color-background: #000000;
+
+    --color-surface: #0a0a0a;
+
+    --color-surface-light: #111111;
+
+    --color-white: #ffffff;
+
+    --color-text: #f5f5f5;
+
+    --color-text-muted: #a6a6a6;
+
+    --color-text-disabled: #555555;
+
+
+    /* Cor de destaque */
+
+    --color-accent: #b48cff;
+
+    --color-accent-bright: #d2b8ff;
+
+    --color-accent-dark: #6f42c1;
+
+
+    /* Estados */
+
+    --color-success: #4ade80;
+
+    --color-warning: #facc15;
+
+    --color-danger: #ff5555;
+
+
+    /* Bordas */
+
+    --border-color: #2a2a2a;
+
+    --border-focus: #ffffff;
+
+
+    /* Dimensões */
+
+    --content-width: 720px;
+
+    --menu-width: 420px;
+
+    --button-height: 56px;
+
+
+    /* Espaçamentos */
+
+    --space-xs: 0.5rem;
+
+    --space-sm: 0.75rem;
+
+    --space-md: 1rem;
+
+    --space-lg: 1.5rem;
+
+    --space-xl: 2rem;
+
+    --space-2xl: 3rem;
+
+
+    /* Bordas */
+
+    --radius-small: 6px;
+
+    --radius-medium: 10px;
+
+    --radius-large: 16px;
+
+
+    /* Sombras */
+
+    --shadow-focus:
+        0 0 0 3px #000,
+        0 0 0 6px var(--color-accent);
+
+
+    /* Transições */
+
+    --transition-fast:
+        120ms ease;
+
+    --transition-normal:
+        200ms ease;
+}
+
+
+/* ============================================================
+   3. ELEMENTOS GERAIS
+   ============================================================ */
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+
+button {
+    border: 0;
+}
+
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+
+p {
+    max-width: 65ch;
+}
+
+
+h1,
+h2,
+h3 {
+    line-height: 1.15;
+}
+
+
+/* ============================================================
+   4. GAME ROOT
+   ============================================================ */
+
+#game {
+    position: relative;
+
+    width: 100%;
+    height: 100vh;
+
+    min-height: 100vh;
+
+    background: #000;
+
+    isolation: isolate;
+}
+
+
+/* ============================================================
+   5. TELAS
+   ============================================================ */
+
+.screen {
+    position: absolute;
+
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: #000;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: var(--space-xl);
+
+    overflow-y: auto;
+
+    z-index: 10;
+}
+
+
+.screen.hidden {
+    display: none;
+}
+
+
+/* ============================================================
+   6. CONTAINER DOS MENUS
+   ============================================================ */
+
+.menu-container {
+    width: min(
+        100%,
+        var(--menu-width)
+    );
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: var(--space-lg);
+
+    padding: var(--space-xl);
+}
+
+
+/* ============================================================
+   7. TÍTULOS
+   ============================================================ */
+
+#main-menu-title {
+    color: var(--color-white);
+
+    font-size:
+        clamp(
+            2.5rem,
+            8vw,
+            5rem
+        );
+
+    font-weight: 800;
+
+    letter-spacing:
+        0.12em;
+
+    text-align: center;
+
+    line-height: 1;
+}
+
+
+.menu-container h2 {
+    color: var(--color-white);
+
+    font-size:
+        clamp(
+            1.8rem,
+            5vw,
+            3rem
+        );
+
+    font-weight: 750;
+
+    letter-spacing:
+        0.03em;
+}
+
+
+.menu-container h3 {
+    color: var(--color-white);
+
+    font-size: 1rem;
+
+    font-weight: 700;
+
+    letter-spacing:
+        0.04em;
+}
+
+
+/* ============================================================
+   8. SUBTÍTULO
+   ============================================================ */
+
+.menu-subtitle {
+    color: var(--color-text-muted);
+
+    text-align: center;
+
+    font-size: 1rem;
+
+    margin-top: -0.75rem;
+}
+
+
+/* ============================================================
+   9. NAVEGAÇÃO
+   ============================================================ */
+
+#main-navigation,
+[aria-label="Menu de pausa"] {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-sm);
+
+    width: 100%;
+}
+
+
+/* ============================================================
+   10. BOTÕES
+   ============================================================ */
+
+.menu-button {
+    width: 100%;
+
+    min-height: var(--button-height);
+
+    padding:
+        0.8rem
+        1.2rem;
+
+    border:
+        1px solid
+        var(--border-color);
+
+    border-radius:
+        var(--radius-medium);
+
+    background:
+        var(--color-surface);
+
+    color:
+        var(--color-text);
+
+    font-size: 1rem;
+
+    font-weight: 650;
+
+    text-align: center;
+
+    cursor: pointer;
+
+    transition:
+        background
+        var(--transition-fast),
+
+        border-color
+        var(--transition-fast),
+
+        color
+        var(--transition-fast),
+
+        transform
+        var(--transition-fast);
+}
+
+
+.menu-button:hover {
+    background:
+        var(--color-surface-light);
+
+    border-color:
+        #555;
+
+    color:
+        var(--color-white);
+}
+
+
+.menu-button:active {
+    transform:
+        scale(0.98);
+}
+
+
+/* ============================================================
+   11. BOTÃO SECUNDÁRIO
+   ============================================================ */
+
+.menu-button.secondary {
+    background: transparent;
+
+    border-color:
+        #222;
+
+    color:
+        var(--color-text-muted);
+}
+
+
+.menu-button.secondary:hover {
+    background:
+        #080808;
+
+    border-color:
+        #444;
+
+    color:
+        var(--color-white);
+}
+
+
+/* ============================================================
+   12. BOTÃO DESABILITADO
+   ============================================================ */
+
+.menu-button:disabled {
+    background:
+        #050505;
+
+    border-color:
+        #111;
+
+    color:
+        var(--color-text-disabled);
+
+    opacity: 0.7;
+}
+
+
+.menu-button:disabled:hover {
+    background:
+        #050505;
+
+    border-color:
+        #111;
+
+    color:
+        var(--color-text-disabled);
+}
+
+
+/* ============================================================
+   13. FOCO — MUITO IMPORTANTE
+   ============================================================ */
+
+/*
+   O foco nunca deve desaparecer.
+
+   Isso é essencial para jogadores que navegam exclusivamente
+   pelo teclado.
+*/
+
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: none;
+
+    box-shadow:
+        var(--shadow-focus);
+}
+
+
+/* ============================================================
+   14. ESTADO DE FOCO DOS BOTÕES
+   ============================================================ */
+
+.menu-button:focus-visible {
+    background:
+        #171717;
+
+    border-color:
+        var(--color-accent);
+
+    color:
+        var(--color-white);
+}
+
+
+/* ============================================================
+   15. TEXTO
+   ============================================================ */
+
+.menu-container p {
+    color:
+        var(--color-text-muted);
+
+    font-size:
+        0.95rem;
+}
+
+
+/* ============================================================
+   16. STATUS
+   ============================================================ */
+
+#calibration-status,
+#game-status {
+    width: 100%;
+
+    min-height: 48px;
+
+    padding:
+        0.8rem
+        1rem;
+
+    border:
+        1px solid
+        var(--border-color);
+
+    border-radius:
+        var(--radius-small);
+
+    background:
+        #050505;
+
+    color:
+        var(--color-text-muted);
+
+    font-size:
+        0.9rem;
+}
+
+
+/* ============================================================
+   17. CONFIGURAÇÕES
+   ============================================================ */
+
+.settings-group {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-sm);
+
+    padding:
+        var(--space-lg);
+
+    border:
+        1px solid
+        var(--border-color);
+
+    border-radius:
+        var(--radius-medium);
+
+    background:
+        #050505;
+}
+
+
+.settings-group h3 {
+    margin-bottom:
+        0.25rem;
+}
+
+
+.settings-group label {
+    display: flex;
+
+    align-items: center;
+
+    gap: 0.75rem;
+
+    color:
+        var(--color-text-muted);
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   18. CHECKBOX
+   ============================================================ */
+
+.settings-group input[type="checkbox"] {
+    width: 20px;
+
+    height: 20px;
+
+    accent-color:
+        var(--color-accent);
+
+    cursor: pointer;
+}
+
+
+.settings-group input[type="checkbox"]:focus-visible {
+    outline:
+        3px solid
+        var(--color-accent);
+
+    outline-offset:
+        3px;
+}
+
+
+/* ============================================================
+   19. RANGE
+   ============================================================ */
+
+.settings-group input[type="range"] {
+    width: 100%;
+
+    accent-color:
+        var(--color-accent);
+
+    cursor: pointer;
+}
+
+
+.settings-group input[type="range"]:focus-visible {
+    outline:
+        3px solid
+        var(--color-accent);
+
+    outline-offset:
+        4px;
+}
+
+
+/* ============================================================
+   20. ACESSIBILIDADE
+   ============================================================ */
+
+.accessibility-info {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: var(--space-md);
+
+    padding:
+        var(--space-lg);
+
+    border:
+        1px solid
+        var(--border-color);
+
+    border-radius:
+        var(--radius-medium);
+
+    background:
+        #050505;
+}
+
+
+.accessibility-info h3 {
+    color:
+        var(--color-white);
+}
+
+
+.accessibility-info p {
+    color:
+        var(--color-text-muted);
+
+    margin-top:
+        -0.5rem;
+}
+
+
+/* ============================================================
+   21. WORLD
+   ============================================================ */
+
+#world {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        #000;
+
+    pointer-events: none;
+}
+
+
+/*
+   O mundo não deve depender de elementos visuais.
+
+   Futuramente podemos usar este elemento para:
+
+   - debug
+   - modo de alto contraste
+   - visualização opcional
+   - ferramentas de desenvolvimento
+*/
+
+
+/* ============================================================
+   22. PLAYER STATUS
+   ============================================================ */
+
+#player-status {
+    position: absolute;
+
+    top: 1rem;
+
+    left: 1rem;
+
+    z-index: 100;
+}
+
+
+/* ============================================================
+   23. BOOT SCREEN
+   ============================================================ */
+
+.boot-screen {
+    position: fixed;
+
+    inset: 0;
+
+    z-index: 9999;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    background:
+        #000;
+
+    color:
+        var(--color-white);
+
+    padding:
+        var(--space-xl);
+
+    transition:
+        opacity
+        300ms ease;
+}
+
+
+.boot-screen.hidden {
+    opacity: 0;
+
+    pointer-events: none;
+}
+
+
+#boot-message {
+    color:
+        var(--color-text-muted);
+
+    font-size:
+        0.95rem;
+
+    text-align: center;
+}
+
+
+/* ============================================================
+   24. SCREEN READER ONLY
+   ============================================================ */
+
+/*
+   IMPORTANTE:
+
+   Não usamos display:none.
+
+   Elementos com display:none não são expostos ao leitor
+   de tela.
+
+   Esta técnica mantém o conteúdo acessível às tecnologias
+   assistivas sem colocá-lo visualmente na interface.
+*/
+
+.sr-only {
+    position: absolute !important;
+
+    width: 1px !important;
+
+    height: 1px !important;
+
+    padding: 0 !important;
+
+    margin: -1px !important;
+
+    overflow: hidden !important;
+
+    clip: rect(0, 0, 0, 0) !important;
+
+    white-space: nowrap !important;
+
+    border: 0 !important;
+}
+
+
+/* ============================================================
+   25. ALTO CONTRASTE
+   ============================================================ */
+
+body.high-contrast {
+    --color-background:
+        #000;
+
+    --color-surface:
+        #000;
+
+    --color-surface-light:
+        #181818;
+
+    --color-text:
+        #fff;
+
+    --color-text-muted:
+        #fff;
+
+    --color-accent:
+        #00ffff;
+
+    --border-color:
+        #fff;
+}
+
+
+body.high-contrast .menu-button {
+    border-width:
+        2px;
+}
+
+
+body.high-contrast .settings-group,
+body.high-contrast .accessibility-info,
+body.high-contrast #calibration-status,
+body.high-contrast #game-status {
+    border-width:
+        2px;
+}
+
+
+/* ============================================================
+   26. RESPONSIVIDADE
+   ============================================================ */
+
+@media (max-width: 600px) {
+
+    .screen {
+        padding:
+            var(--space-md);
+    }
+
+
+    .menu-container {
+        width: 100%;
+
+        padding:
+            var(--space-md);
+    }
+
+
+    #main-menu-title {
+        font-size:
+            clamp(
+                2rem,
+                12vw,
+                3.5rem
+            );
+    }
+
+
+    .menu-button {
+        min-height:
+            52px;
+
+        font-size:
+            0.95rem;
+    }
+
+}
+
+
+/* ============================================================
+   27. TELAS MUITO PEQUENAS
+   ============================================================ */
+
+@media (max-height: 500px) {
+
+    .screen {
+        align-items:
+            flex-start;
+
+        padding-top:
+            var(--space-md);
+    }
+
+
+    .menu-container {
+        gap:
+            var(--space-md);
+    }
+
+
+    #main-menu-title {
+        font-size:
+            2rem;
+    }
+
+}
+
+
+/* ============================================================
+   28. REDUÇÃO DE MOVIMENTO
+   ============================================================ */
+
+/*
+   Para jogadores sensíveis a movimento/animações.
+
+   O jogo em si não depende dessas animações.
+*/
+
+@media (prefers-reduced-motion: reduce) {
+
+    html {
+        scroll-behavior:
+            auto;
+    }
+
+
+    *,
+    *::before,
+    *::after {
+        animation-duration:
+            0.01ms !important;
+
+        animation-iteration-count:
+            1 !important;
+
+        transition-duration:
+            0.01ms !important;
+    }
+
+}
+
+
+/* ============================================================
+   29. MODO DE DEBUG
+   ============================================================ */
+
+body.debug-mode #world {
+    outline:
+        1px solid
+        rgba(180, 140, 255, 0.25);
+}
+
+
+body.debug-mode #player-status {
+    position: fixed;
+
+    display: block;
+
+    width: auto;
+
+    padding:
+        1rem;
+
+    background:
+        rgba(0, 0, 0, 0.9);
+
+    border:
+        1px solid
+        var(--color-accent);
+
+    color:
+        var(--color-white);
+
+    font-family:
+        monospace;
+
+    font-size:
+        0.8rem;
+}
+
+
+/* ============================================================
+   30. SELEÇÃO DE TEXTO
+   ============================================================ */
+
+::selection {
+    background:
+        var(--color-accent);
+
+    color:
+        #000;
+}
+
+
+/* ============================================================
+   31. SCROLLBAR
+   ============================================================ */
+
+::-webkit-scrollbar {
+    width:
+        10px;
+
+    height:
+        10px;
+}
+
+
+::-webkit-scrollbar-track {
+    background:
+        #000;
+}
+
+
+::-webkit-scrollbar-thumb {
+    background:
+        #333;
+
+    border-radius:
+        999px;
+}
+
+
+::-webkit-scrollbar-thumb:hover {
+    background:
+        #555;
+}
+
+
+/* ============================================================
+   32. FALLBACK PARA NAVEGADORES SEM :focus-visible
+   ============================================================ */
+
+button:focus,
+input:focus,
+select:focus,
+textarea:focus {
+    outline:
+        2px solid
+        transparent;
+}
+
+
+/* ============================================================
+   33. FINAL
+   ============================================================ */
+
+/*
+   Fim do sistema visual inicial.
+
+   Próximo estágio:
+
+   JavaScript
+   ├── Game
+   ├── GameLoop
+   ├── EventBus
+   ├── StateMachine
+   ├── InputManager
+   └── AudioEngine
+
+   NÃO adicionar gameplay neste arquivo.
+*/
+```
 
