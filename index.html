@@ -168,3 +168,32 @@
     <script src="script.js"></script>
 </body>
 </html>
+<!-- Área de Status para Leitor de Tela (Substitui o alert) -->
+    <div id="accessibility-status" role="status" aria-live="polite" class="sr-only"></div>
+
+    <!-- Barra de Ferramentas de Acessibilidade -->
+    <aside aria-label="Ferramentas de Acessibilidade" class="accessibility-toolbar">
+        <div class="container toolbar-content">
+            <span class="toolbar-title" id="label-acessibilidade">Acessibilidade:</span>
+            
+            <div class="toolbar-controls" role="group" aria-labelledby="label-acessibilidade">
+                <!-- Visuais -->
+                <button id="btn-aumentar-fonte" class="btn-tool" aria-label="A mais">A+</button>
+                <button id="btn-diminuir-fonte" class="btn-tool" aria-label="A menos">A-</button>
+                <button id="btn-alto-contraste" class="btn-tool" aria-pressed="false" aria-label="Alto Contraste">Alto Contraste</button>
+                <button id="btn-contraste-ampliado" class="btn-tool" aria-pressed="false" aria-label="Contraste Ampliado">Contraste Ampliado</button>
+                <button id="btn-reduzir-animacao" class="btn-tool" aria-pressed="false" aria-label="Reduzir Animações">Reduzir Animações</button>
+                
+                <!-- Controles de Voz e Áudio -->
+                <div class="voice-controls-group">
+                    <button id="btn-toggle-voz" class="btn-tool" aria-pressed="false" aria-label="Ativar Voz">Ativar Voz</button>
+                    <button id="btn-som-navegacao" class="btn-tool" aria-pressed="false" aria-label="Som de Navegação">Som de Navegação</button>
+                    <button id="btn-testar-voz" class="btn-tool" aria-label="Testar Voz">Testar Voz</button>
+                    <button id="btn-parar-voz" class="btn-tool" aria-label="Parar Voz">Parar Voz</button>
+                </div>
+
+                <button id="btn-restaurar" class="btn-tool" aria-label="Restaurar Padrões">Restaurar Padrões</button>
+            </div>
+        </div>
+    </aside>
+
