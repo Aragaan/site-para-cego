@@ -1,0 +1,194 @@
+ECHO//NULL 2D — JOGO COMPLETO
+================================
+
+1. VISÃO GERAL
+---------------
+ECHO//NULL 2D é um Audio Game RPG de exploração de labirinto criado para ser
+jogável por pessoas totalmente cegas usando principalmente teclado, narração
+por SpeechSynthesis e feedback espacial com Web Audio API.
+
+A interface visual é um guia adicional para pessoas videntes ou com baixa visão.
+O projeto também demonstra recursos de acessibilidade para o trabalho acadêmico
+sobre ciência, tecnologia, IA e acessibilidade para a visão.
+
+2. ARQUIVOS
+-----------
+index.html     Estrutura semântica, ARIA, canvas, HUD e controles.
+script.js      Motor do jogo, labirintos, RPG, inimigos, áudio e voz.
+style.css      Interface neon de alto contraste e foco acessível.
+LEIA-ME.txt    Este manual.
+ABRIR_JOGO.bat Abre o jogo no navegador padrão do Windows.
+
+3. COMO ABRIR
+-------------
+Opção recomendada:
+- Extraia o ZIP.
+- Entre na pasta ECHO_NULL_2D.
+- Dê duplo clique em ABRIR_JOGO.bat.
+- Clique em "Ativar áudio" para liberar o Web Audio API.
+- Use fones de ouvido para perceber melhor o posicionamento estéreo.
+
+O reconhecimento de voz depende do navegador e das permissões do microfone.
+Chrome/Edge costumam oferecer o melhor suporte para Web Speech API.
+
+4. CONTROLES DE TECLADO
+-----------------------
+Seta para cima ou W  = Você avançou reto.
+Seta para baixo ou S = Você deu um passo para trás.
+Seta para esquerda/A = Você virou para a esquerda.
+Seta para direita/D  = Você virou para a direita.
+Espaço              = Emitir Eco.
+R                   = Super Eco / Radar Ampliado.
+E                   = Escudo Sonoro.
+V                   = Ativar reconhecimento de voz.
+P                   = Pausar/retomar.
+M                   = Narrar o estado atual.
+
+Os comandos de movimento usam linguagem relativa e natural. O jogo não depende
+de termos como Leste/Oeste para a movimentação narrada.
+
+5. COLISÕES
+-----------
+Quando o jogador tenta atravessar uma parede, a mensagem obrigatória é:
+
+"Existe uma parede que você não consegue passar."
+
+Ela é acompanhada por um impacto grave sintetizado pela Web Audio API.
+
+O Escudo Sonoro pode absorver um impacto de parede ou de inimigo.
+
+6. COMANDOS DE VOZ
+------------------
+Ative o microfone pelo botão ou pela tecla V.
+
+Movimento:
+- "frente", "avançar", "reto", "ir", "subir", "frente reto"
+- "trás", "tras", "voltar", "ré", "descer", "recuar"
+- "esquerda", "vira esquerda", "virei esquerda", "lado esquerdo"
+- "direita", "vira direita", "lado direito", "virei direita"
+
+Ações:
+- "eco", "sonar", "pulso", "ouvir", "onde estou"
+- "radar", "super eco", "especial"
+- "escudo"
+
+A interpretação é baseada em intenção/sinônimos e não somente em uma palavra
+exata.
+
+7. ÁUDIO E ECOLOCALIZAÇÃO
+-------------------------
+O jogo sintetiza os sons em tempo real.
+
+Eco:
+- mede as distâncias até as paredes em quatro direções relativas;
+- caminhos mais livres recebem frequências mais altas;
+- paredes próximas ficam mais graves e mais presentes no lado correspondente;
+- existe um pulso central adicional para reforçar a percepção.
+
+Farol:
+- a saída mantém um som contínuo;
+- frequência muda conforme a distância;
+- panorama estéreo muda conforme a posição relativa do objetivo;
+- quanto mais perto, mais presente o farol.
+
+Assinaturas:
+- passos: pulso curto e suave;
+- paredes: impacto grave;
+- inimigos: zumbido distorcido/pulsante;
+- conhecimento: pequena vinheta harmônica;
+- salas secretas: efeito retrô/mágico;
+- vitória: sequência musical.
+
+8. RPG E FASES
+--------------
+Existem 3 zonas:
+- Zona 01 — 7x7
+- Zona 02 — 10x10
+- Zona 03 — 12x12
+
+Cada zona possui:
+- 3 pontos de conhecimento;
+- saída/farol;
+- entidades de ruído;
+- salas secretas nas bordas;
+- vida/estrutura;
+- habilidades do Explorador.
+
+Super Eco:
+Revela a distância do farol, inimigo mais próximo e paredes próximas.
+
+Escudo Sonoro:
+Fica ativo até absorver um impacto.
+
+Para terminar uma zona, encontre os 3 checkpoints e depois chegue ao farol.
+
+9. CHECKPOINTS EDUCACIONAIS
+---------------------------
+Ao encontrar os checkpoints, o jogo pausa temporariamente e narra os textos
+educativos sobre IA, visão computacional e navegação assistiva fornecidos no
+enunciado do projeto.
+
+10. TAB E LEITURA AUTOMÁTICA
+----------------------------
+As seções informativas possuem tabindex="0".
+
+Ao receber foco por TAB, SpeechSynthesis lê imediatamente o conteúdo associado.
+
+A seção "Recursos Assistivos" utiliza o texto exato solicitado no projeto:
+
+"Recursos Assistivos - Acessibilidade integrada. SpeechSynthesis: narração
+do estado do jogo, colisões, checkpoints e vitória. Web Speech API: comandos
+de voz em português quando suportados pelo navegador. Web Audio API: ecos com
+posicionamento estéreo e farol sonoro. ARIA: landmarks, labels, live regions,
+foco e semântica para leitores de tela. Alto contraste: interface preta com
+texto claro e indicadores em neon. Baixa visão: mapa ampliado, símbolos,
+legenda e estado textual. O reconhecimento de voz depende do suporte do
+navegador e das permissões do microfone. A experiência principal permanece
+jogável pelo teclado."
+
+11. ACESSIBILIDADE
+------------------
+Foram utilizados:
+- landmarks semânticos;
+- aria-label;
+- aria-live;
+- role="status";
+- foco visível;
+- tabindex="0" em seções informativas;
+- skip link;
+- contraste elevado;
+- mapa visual;
+- HUD textual;
+- controle completo pelo teclado;
+- SpeechSynthesis;
+- Web Speech API;
+- Web Audio API.
+
+12. OBSERVAÇÃO SOBRE "BINAURAL"
+--------------------------------
+O navegador não fornece uma garantia universal de áudio binaural físico sem
+hardware específico. Este projeto usa StereoPannerNode e síntese estéreo em
+tempo real, que é a abordagem Web Audio API mais compatível para criar
+posicionamento esquerda/direita com fones.
+
+13. COMPATIBILIDADE
+-------------------
+O jogo foi escrito para navegadores modernos com:
+- Canvas 2D;
+- Web Audio API;
+- SpeechSynthesis;
+- Web Speech API, quando disponível.
+
+O jogo continua funcional pelo teclado mesmo sem reconhecimento de voz.
+
+14. CONTEXTO ACADÊMICO
+----------------------
+Eixo: Acessibilidade para a visão.
+
+Pergunta central:
+Como a ciência, a tecnologia e as ferramentas de IA contribuem para a
+melhoria da visão das pessoas?
+
+A proposta demonstra que tecnologias assistivas também podem criar novas formas
+de perceber informações espaciais através do áudio, narração e interação
+acessível.
